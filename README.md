@@ -26,20 +26,20 @@ Full gamepad API from HID library, you can find [here](https://github.com/NicoHo
 * PEDAL_BRAKE_PIN: Analog pin for the brake pedal potentiometer
 * PEDAL_CLUTCH_PIN: Analog pin for the clutch pedal potentiometer
 * PEDAL.._DEAD_ZONE: Constants defining dead zones for each pedals
-* PEDAL.._PIN_MAX_VALUES: Maximum possible value of the your pedal potentiometers
+* PEDAL.._PIN_MAX_VALUE: Maximum possible value of the your pedal potentiometers
 * PEDAL.._TRIGGER_COOF: Coefficient for scaling the joystick values (see HID-Project [documentation](https://github.com/NicoHood/HID/wiki/Gamepad-API))
 
 ### Data Tracking:
-* Last & Current Values: Each input has variables to track current and previous states
+* .._value & .._last_value: Each input has variables to track current and previous states
 * gamepad_have_changes: Flag to indicate if any changes occurred in the gamepad state
 
-## Usage
-This firmware reads inputs from the steering wheel, pedals, and buttons, applies necessary scaling and dead zone adjustments, and can be configured to send these values as gamepad inputs. The gamepad_have_changes flag is used to optimize data transmission by only sending updates when necessary.
-
-## Configuration Notes:
+### Configuration Notes:
 * All analog readings are scaled to fit within the standard gamepad input range
 * Dead zones are implemented to ignore minor movements or readings
 * Variables marked as volatile are used for values that can change during interrupts
+
+## Usage
+This firmware reads inputs from the steering wheel, pedals, and buttons, applies necessary scaling and dead zone adjustments, and can be configured to send these values as gamepad inputs. The gamepad_have_changes flag is used to optimize data transmission by only sending updates when necessary.
 
 # Licensing
 Distributed under the MIT license.
