@@ -4,7 +4,7 @@
 
 This firmware is designed to control a steering wheel setup with pedals and transmission controls based on the electronic board 'Arduino Leonardo'. It uses the HID (Human Interface Device) library to communicate with the computer as a gamepad.
 
-Full gamepad API from HID library, you can find [here](https://github.com/NicoHood/HID/wiki/Gamepad-API).
+Full gamepad API from the [HID-Project](https://github.com/NicoHood/HID) library, you can find [here](https://github.com/NicoHood/HID/wiki/Gamepad-API).
 
 ## Preferences
 
