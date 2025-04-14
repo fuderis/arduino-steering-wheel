@@ -14,7 +14,7 @@ The full gamepad API from the [HID](https://github.com/NicoHood/HID) library, yo
 * STEERING_WHEEL_PIN_MAX_VALUE: Maximum possible value of the your steering wheel potentiometer
 * STEERING_WHEEL_PIN_CENTER_VALUE: Center value calculated as half of max value
 * STEERING_WHEEL_MAX_VALUE: Maximum value considering dead zone
-* STEERING_WHEEL_STICK_COOF: Coefficient for scaling the joystick values (see HID-Project [documentation](https://github.com/NicoHood/HID/wiki/Gamepad-API))
+* STEERING_WHEEL_STICK_COOF: Coefficient for scaling the joystick values (see the [gamepad API](https://github.com/NicoHood/HID/wiki/Gamepad-API))
 
 ### Transmission & Handbrake:
 * TRANSMISSION_UP_PIN: Digital pin for the transmission up button
@@ -27,7 +27,7 @@ The full gamepad API from the [HID](https://github.com/NicoHood/HID) library, yo
 * PEDAL_CLUTCH_PIN: Analog pin for the clutch pedal potentiometer
 * PEDAL.._DEAD_ZONE: Constants defining dead zones for each pedals
 * PEDAL.._PIN_MAX_VALUE: Maximum possible value of the your pedal potentiometers
-* PEDAL.._TRIGGER_COOF: Coefficient for scaling the joystick values (see HID-Project [documentation](https://github.com/NicoHood/HID/wiki/Gamepad-API))
+* PEDAL.._STICK_COOF: Coefficient for scaling the joystick values (see the [gamepad API](https://github.com/NicoHood/HID/wiki/Gamepad-API))
 
 ### Data Tracking:
 * .._value & .._last_value: Each input has variables to track current and previous states

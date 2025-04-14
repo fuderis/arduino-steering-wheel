@@ -39,9 +39,9 @@ const int PEDAL_BRAKE_MAX_VALUE = PEDAL_BRAKE_PIN_MAX_VALUE;
 const int PEDAL_CLUTCH_PIN_MAX_VALUE = 110;
 const int PEDAL_CLUTCH_MAX_VALUE = PEDAL_CLUTCH_PIN_MAX_VALUE;
 
-const float PEDAL_GAS_TRIGGER_COOF = 32767 / (float)PEDAL_GAS_MAX_VALUE;
-const float PEDAL_BRAKE_TRIGGER_COOF = 32767 / (float)PEDAL_BRAKE_MAX_VALUE;
-const float PEDAL_CLUTCH_TRIGGER_COOF = 32767 / (float)PEDAL_CLUTCH_MAX_VALUE;
+const float PEDAL_GAS_STICK_COOF = 32767 / (float)PEDAL_GAS_MAX_VALUE;
+const float PEDAL_BRAKE_STICK_COOF = 32767 / (float)PEDAL_BRAKE_MAX_VALUE;
+const float PEDAL_CLUTCH_STICK_COOF = 32767 / (float)PEDAL_CLUTCH_MAX_VALUE;
 
 volatile float pedal_gas_value = 0.0;
 volatile float pedal_gas_last_value = 0.0;
@@ -186,7 +186,7 @@ void pedals_handler() {
     }
     
     if (pedal_gas_value != pedal_gas_last_value) {
-        Gamepad.yAxis(pedal_gas_value * PEDAL_GAS_TRIGGER_COOF);
+        Gamepad.yAxis(pedal_gas_value * PEDAL_GAS_STICK_COOF);
         gamepad_have_changes = true;
 
         Serial.print("Pedal 'gas' value: ");
@@ -212,7 +212,7 @@ void pedals_handler() {
     }
     
     if (pedal_brake_value != pedal_brake_last_value) {
-        Gamepad.ryAxis(pedal_brake_value * PEDAL_BRAKE_TRIGGER_COOF);
+        Gamepad.ryAxis(pedal_brake_value * PEDAL_BRAKE_STICK_COOF);
         gamepad_have_changes = true;
 
         Serial.print("Pedal 'brake' value: ");
@@ -238,7 +238,7 @@ void pedals_handler() {
     }
     
     if (pedal_clutch_value != pedal_clutch_last_value) {
-        Gamepad.rxAxis(pedal_clutch_value * PEDAL_CLUTCH_TRIGGER_COOF);
+        Gamepad.rxAxis(pedal_clutch_value * PEDAL_CLUTCH_STICK_COOF);
         gamepad_have_changes = true;
 
         Serial.print("Pedal 'clutch' value: ");
