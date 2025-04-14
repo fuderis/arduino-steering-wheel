@@ -1,4 +1,4 @@
-# Steering Wheel Controller Firmware Documentation
+# Steering Wheel Controller Firmware
 
 ## Overview
 
