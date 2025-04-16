@@ -6,7 +6,7 @@ This firmware is designed to control a steering wheel setup with pedals and tran
 
 The full gamepad API from the [HID-Project](https://github.com/NicoHood/HID) library, you can find [here](https://github.com/NicoHood/HID/wiki/Gamepad-API).
 
-## Preferences (file config.h)
+## Preferences (file [config.h](https://github.com/fuderis/arduino-steering-wheel/blob/main/src/config.h))
 
 ### Steering Wheel:
 * STEERING_WHEEL_PIN: The analog pin for the steering wheel potentiometer
@@ -30,7 +30,7 @@ The full gamepad API from the [HID-Project](https://github.com/NicoHood/HID) lib
 * PEDAL_BRAKE_PIN: The analog pin for the brake pedal potentiometer
 * PEDAL_CLUTCH_PIN: The analog pin for the clutch pedal potentiometer
 * PEDAL.._DEAD_ZONE: Constants defining dead zones for each pedals
-* PEDAL.._MAX_VALUE: The maximum possible value for the displacement of your pedal's potentiometers
+* PEDAL.._MAX_VALUE: The maximum possible value for the displacement of your pedals potentiometers
 
 ## Usage
 This firmware reads inputs from the steering wheel, pedals, and buttons, applies necessary scaling and dead zone adjustments, and can be configured to send these values as gamepad inputs.
