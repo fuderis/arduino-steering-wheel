@@ -1,3 +1,14 @@
+const float PEDAL_GAS_STICK_COOF = 32767 / (float)PEDAL_GAS_MAX_VALUE;
+const float PEDAL_BRAKE_STICK_COOF = 32767 / (float)PEDAL_BRAKE_MAX_VALUE;
+const float PEDAL_CLUTCH_STICK_COOF = 32767 / (float)PEDAL_CLUTCH_MAX_VALUE;
+
+volatile float pedal_gas_value = 0.0;
+volatile float pedal_gas_last_value = 0.0;
+volatile float pedal_brake_value = 0.0;
+volatile float pedal_brake_last_value = 0.0;
+volatile float pedal_clutch_value = 0.0;
+volatile float pedal_clutch_last_value = 0.0;
+
 // The pedals handler
 void pedals_handler() {
     // PEDAL GAS:

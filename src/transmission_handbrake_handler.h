@@ -1,3 +1,11 @@
+const int TRANSMISSION_UP_BUTTON = 10;
+const int TRANSMISSION_DOWN_BUTTON = 11;
+const int HANDBRAKE_BUTTON = 12;
+
+volatile bool transmission_up_pressed = false;
+volatile bool transmission_down_pressed = false;
+volatile bool handbrake_pressed = false;
+
 // The transmission & handbrake handler
 void transmission_handbrake_handler() {
     // transmission up:
@@ -5,7 +13,7 @@ void transmission_handbrake_handler() {
         if (!transmission_up_pressed) {
             transmission_up_pressed = true;
 
-            Gamepad.press(1);
+            Gamepad.press(TRANSMISSION_UP_BUTTON);
             Gamepad.write();
 
             Serial.println("Transmission up pressed");
@@ -13,7 +21,7 @@ void transmission_handbrake_handler() {
     } else if (transmission_up_pressed) {
         transmission_up_pressed = false;
 
-        Gamepad.release(1);
+        Gamepad.release(TRANSMISSION_UP_BUTTON);
         Gamepad.write();
 
         Serial.println("Transmission up released");
@@ -24,7 +32,7 @@ void transmission_handbrake_handler() {
         if (!transmission_down_pressed) {
             transmission_down_pressed = true;
 
-            Gamepad.press(2);
+            Gamepad.press(TRANSMISSION_DOWN_BUTTON);
             Gamepad.write();
 
             Serial.println("Transmission down pressed");
@@ -32,7 +40,7 @@ void transmission_handbrake_handler() {
     } else if (transmission_down_pressed) {
         transmission_down_pressed = false;
 
-        Gamepad.release(2);
+        Gamepad.release(TRANSMISSION_DOWN_BUTTON);
         Gamepad.write();
 
         Serial.println("Transmission down released");
@@ -43,7 +51,7 @@ void transmission_handbrake_handler() {
         if (!handbrake_pressed) {
             handbrake_pressed = true;
 
-            Gamepad.press(3);
+            Gamepad.press(HANDBRAKE_BUTTON);
             Gamepad.write();
             
             Serial.println("Handbrake pressed");
@@ -51,7 +59,7 @@ void transmission_handbrake_handler() {
     } else if (handbrake_pressed) {
         handbrake_pressed = false;
 
-        Gamepad.release(3);
+        Gamepad.release(HANDBRAKE_BUTTON);
         Gamepad.write();
 
         Serial.println("Handbrake released");

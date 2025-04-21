@@ -17,8 +17,8 @@ The full gamepad API from the [HID-Project](https://github.com/NicoHood/HID) lib
 * STEERING_WHEEL_FEEDBACK_IN1_PIN: The digital pin for the feedback motor input1 pin
 * STEERING_WHEEL_FEEDBACK_IN2_PIN: The digital pin for the feedback motor input2 pin
 * STEERING_WHEEL_FEEDBACK_DEAD_ZONE: Constant defining dead zone for starting the motor moving
-* STEERING_WHEEL_FEEDBACK_MIN_POWER: The minimal power of the feedback motor [0, 255]
-* STEERING_WHEEL_FEEDBACK_MAX_POWER: The maximum power of the feedback motor [0, 255]
+* STEERING_WHEEL_FEEDBACK_MIN_SPEED: The minimum speed of the feedback motor [0, 255]
+* STEERING_WHEEL_FEEDBACK_MAX_SPEED: The maximum speed of the feedback motor [0, 255]
 
 ### Transmission & Handbrake:
 * TRANSMISSION_UP_PIN: The digital pin for the transmission up button
