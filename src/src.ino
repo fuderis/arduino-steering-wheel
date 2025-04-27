@@ -8,12 +8,11 @@
 #include "transmission_handbrake_handler.h"
 #include "pedals_handler.h"
 
-#include "demonstrative_start.h"
+#include "demonstration.h"
 
 void setup() {
     pinMode(WHEEL_PIN, INPUT);
 
-    pinMode(WHEEL_FEEDBACK_ENA_PIN, OUTPUT);
     pinMode(WHEEL_FEEDBACK_IN1_PIN, OUTPUT);
     pinMode(WHEEL_FEEDBACK_IN2_PIN, OUTPUT);
 
@@ -28,7 +27,7 @@ void setup() {
     Serial.begin(9600);
     Gamepad.begin();
 
-    demonstrative_start();
+    demonstration();
 }
 
 void loop() {

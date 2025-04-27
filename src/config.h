@@ -1,16 +1,19 @@
 // STEERING WHEEL
 const int WHEEL_PIN = A0;
 
-const int WHEEL_DEAD_ZONE[2] = {30, 100};
+const int WHEEL_DEGS_MAX = 1800;    // degs to the one side
+const int WHEEL_DEGS_LIMIT = 360;
+
+const int WHEEL_DEAD_ZONE[2] = {5, 0};
 
 // STEERING WHEEL FEEDBACK MOTOR
 const int WHEEL_FEEDBACK_ENA_PIN = 3;
-const int WHEEL_FEEDBACK_IN1_PIN = 4;   // red wire (+)
-const int WHEEL_FEEDBACK_IN2_PIN = 5;   // black wire (-)
+const int WHEEL_FEEDBACK_IN1_PIN = 5;
+const int WHEEL_FEEDBACK_IN2_PIN = 4;
 
-const int WHEEL_FEEDBACK_DEAD_ZONE = 80;
+const int WHEEL_FEEDBACK_DEAD_ZONE = 10;
 
-const float WHEEL_FEEDBACK_MIN_SPEED = 255;  // [0, 255]
+const float WHEEL_FEEDBACK_MIN_SPEED = 230;  // [0, 255]
 const float WHEEL_FEEDBACK_MAX_SPEED = 255;  // [0, 255]
 
 // TRANSMISSION & HANDBRAKE
