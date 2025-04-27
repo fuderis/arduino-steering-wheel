@@ -9,28 +9,30 @@ The full gamepad API from the [HID-Project](https://github.com/NicoHood/HID) lib
 ## Preferences (file [config.h](https://github.com/fuderis/arduino-steering-wheel/blob/main/src/config.h))
 
 ### Steering Wheel:
-* STEERING_WHEEL_PIN: The analog pin for the steering wheel potentiometer
-* STEERING_WHEEL_DEAD_ZONE: The array defining the dead zone values [START, END]
+* WHEEL_PIN: Analog pin for the steering wheel potentiometer
+* WHEEL_DEGS_MAX: Maximum angle of your steering wheel's potentiometer (in each direction)
+* WHEEL_DEGS_LIMIT: Maximum steering angle (in each direction)
+* WHEEL_DEAD_ZONE: Is an array defining the values of the dead zones [START, END]
 
 ### Steering Wheel Feedback:
-* STEERING_WHEEL_FEEDBACK_ENA_PIN: The digital pin with interruptions (with '~' prefix) for the feedback motor ENA pin
-* STEERING_WHEEL_FEEDBACK_IN1_PIN: The digital pin for the feedback motor input1 pin
-* STEERING_WHEEL_FEEDBACK_IN2_PIN: The digital pin for the feedback motor input2 pin
-* STEERING_WHEEL_FEEDBACK_DEAD_ZONE: Constant defining dead zone for starting the motor moving
-* STEERING_WHEEL_FEEDBACK_MIN_SPEED: The minimum speed of the feedback motor [0, 255]
-* STEERING_WHEEL_FEEDBACK_MAX_SPEED: The maximum speed of the feedback motor [0, 255]
+* WHEEL_FEEDBACK_ENA_PIN: Digital pin with interruptions (with '~' prefix) for the feedback motor ENA pin
+* WHEEL_FEEDBACK_IN1_PIN: Digital pin for the feedback motor input1 pin
+* WHEEL_FEEDBACK_IN2_PIN: Digital pin for the feedback motor input2 pin
+* WHEEL_FEEDBACK_DEAD_ZONE: Constant defining dead zone for starting the motor moving
+* WHEEL_FEEDBACK_MIN_SPEED: The minimum speed of the feedback motor [0, 255]
+* WHEEL_FEEDBACK_MAX_SPEED: The maximum speed of the feedback motor [0, 255]
 
 ### Transmission & Handbrake:
-* TRANSMISSION_UP_PIN: The digital pin for the transmission up button
-* TRANSMISSION_DOWN_PIN: The digital pin for the transmission down button
-* HANDBRAKE_PIN: The digital pin for the handbrake button
+* TRANSMISSION_UP_PIN: Digital pin for the transmission up button
+* TRANSMISSION_DOWN_PIN: Digital pin for the transmission down button
+* HANDBRAKE_PIN: Digital pin for the handbrake button
 
 ### Pedals:
-* PEDAL_GAS_PIN: The analog pin for the gas pedal potentiometer
-* PEDAL_BRAKE_PIN: The analog pin for the brake pedal potentiometer
-* PEDAL_CLUTCH_PIN: The analog pin for the clutch pedal potentiometer
+* PEDAL_GAS_PIN: Analog pin for the gas pedal potentiometer
+* PEDAL_BRAKE_PIN: Analog pin for the brake pedal potentiometer
+* PEDAL_CLUTCH_PIN: Analog pin for the clutch pedal potentiometer
 * PEDAL.._DEAD_ZONE: Constants defining dead zones for each pedals
-* PEDAL.._MAX_VALUE: The maximum possible value for the displacement of your pedals potentiometers
+* PEDAL.._MAX_VALUE: Maximum possible value for the displacement of your pedals potentiometers
 
 ## Usage
 This firmware reads inputs from the steering wheel, pedals, and buttons, applies necessary scaling and dead zone adjustments, and can be configured to send these values as gamepad inputs.
