@@ -5,6 +5,7 @@ const float WHEEL_STICK_COOF = 32767 / (float)WHEEL_MAX_VALUE;
 
 volatile float wheel_last_value = 0.0;
 volatile float wheel_value = 0.0;
+volatile bool wheel_direction = false;  // false: to left, true: to right
 
 // The steering wheel handler
 void wheel_handler() {    
@@ -27,12 +28,18 @@ void wheel_handler() {
         wheel_value = value - (value > 0 ? WHEEL_DEAD_ZONE[0] : -WHEEL_DEAD_ZONE[0]);
     }
 
-    if (wheel_value != wheel_last_value) {
+    if (abs(wheel_value - wheel_last_value) > 1 || (wheel_value == 0 && wheel_last_value != 0)) {
         Gamepad.xAxis(wheel_value * WHEEL_STICK_COOF);
         Gamepad.write();
 
         Serial.print("Wheel value: ");
         Serial.println(wheel_value);
+
+        if (wheel_value < wheel_last_value - 10) {
+            wheel_direction = false;
+        } else if (wheel_value > wheel_last_value + 10) {
+            wheel_direction = true;
+        }
 
         wheel_last_value = wheel_value;
     }

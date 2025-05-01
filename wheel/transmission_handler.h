@@ -7,7 +7,7 @@ volatile bool transmission_down_pressed = false;
 volatile bool handbrake_pressed = false;
 
 // The transmission & handbrake handler
-void transmission_handbrake_handler() {
+void transmission_handler() {
     // transmission up:
     if (digitalRead(TRANSMISSION_UP_PIN) == LOW) {
         if (!transmission_up_pressed) {

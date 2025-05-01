@@ -12,15 +12,14 @@ The full gamepad API from the [HID-Project](https://github.com/NicoHood/HID) lib
 * WHEEL_PIN: Analog pin for the steering wheel potentiometer
 * WHEEL_DEGS_MAX: Maximum angle of your steering wheel's potentiometer (in each direction)
 * WHEEL_DEGS_LIMIT: Maximum steering angle (in each direction)
-* WHEEL_DEAD_ZONE: Is an array defining the values of the dead zones [START, END]
+* WHEEL_DEAD_ZONE: Is an array defining the values of the dead zones
 
 ### Steering Wheel Feedback:
-* WHEEL_FEEDBACK_ENA_PIN: Digital pin with interruptions (with '~' prefix) for the feedback motor ENA pin
-* WHEEL_FEEDBACK_IN1_PIN: Digital pin for the feedback motor input1 pin
-* WHEEL_FEEDBACK_IN2_PIN: Digital pin for the feedback motor input2 pin
-* WHEEL_FEEDBACK_DEAD_ZONE: Constant defining dead zone for starting the motor moving
-* WHEEL_FEEDBACK_MIN_SPEED: The minimum speed of the feedback motor [0, 255]
-* WHEEL_FEEDBACK_MAX_SPEED: The maximum speed of the feedback motor [0, 255]
+* FEEDBACK_IN1_PIN: Digital pin with interruptions (with '~' prefix) for the feedback engine input1 pin (by default ~9)
+* FEEDBACK_IN2_PIN: Digital pin with interruptions (with '~' prefix) for the feedback engine input2 pin (by default ~10)
+* FEEDBACK_DEAD_ZONE: Constant defining dead zone for starting the engine moving
+* FEEDBACK_MIN_SPEED: The minimum speed of the feedback engine
+* FEEDBACK_MAX_SPEED: The maximum speed of the feedback engine
 
 ### Transmission & Handbrake:
 * TRANSMISSION_UP_PIN: Digital pin for the transmission up button
