@@ -3,6 +3,32 @@
 
 #include "config.h"
 
+const int PWM_MAX_VALUE = 999;
+
+// Set PWM pins frequency
+void setupPWMFrequency() {
+    TCCR1A = 0;
+    TCCR1B = 0;
+
+    TCCR1A = (1 << COM1A1) | (1 << COM1B1) | (1 << WGM11);
+    TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS10);  // prescaler = 1
+
+    ICR1 = PWM_MAX_VALUE;  // 999 для ~16 кГц
+
+    OCR1A = 0;
+    OCR1B = 0;
+}
+
+// Analog write for pin 9
+void analogWrite9(uint16_t duty) {
+    OCR1A = constrain(duty, 0, PWM_MAX_VALUE);
+}
+
+// Analog write for pin 10
+void analogWrite10(uint16_t duty) {
+    OCR1B = constrain(duty, 0, PWM_MAX_VALUE);
+}
+
 #include "wheel_handler.h"
 #include "feedback_handler.h"
 #include "pedals_handler.h"
@@ -13,13 +39,15 @@
 void setup() {
     pinMode(WHEEL_PIN, INPUT);
 
-    // configuring the Timer1 for Fast PWM with frequency ~7.8 kHz
-    TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11);
-    TCCR1B = _BV(WGM13) | _BV(WGM12) | _BV(CS12);
-    ICR1 = 80;  // 16MHz / (256 * 80) = 7.8125 kHz
+    setupPWMFrequency();
 
-    pinMode(FEEDBACK_IN1_PIN, INPUT);
-    pinMode(FEEDBACK_IN2_PIN, INPUT);
+    pinMode(FEEDBACK_EN_L_PIN, OUTPUT);
+    pinMode(FEEDBACK_EN_R_PIN, OUTPUT);
+    pinMode(FEEDBACK_PWM_L_PIN, INPUT);
+    pinMode(FEEDBACK_PWM_R_PIN, INPUT);
+
+    digitalWrite(FEEDBACK_PWM_L_PIN, LOW);
+    digitalWrite(FEEDBACK_PWM_R_PIN, LOW);
 
     pinMode(TRANSMISSION_UP_PIN, INPUT_PULLUP);
     pinMode(TRANSMISSION_DOWN_PIN, INPUT_PULLUP);
@@ -32,7 +60,7 @@ void setup() {
     Serial.begin(9600);
     Gamepad.begin();
 
-    demonstration();
+    // demonstration();
 }
 
 void loop() {

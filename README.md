@@ -15,8 +15,10 @@ The full gamepad API from the [HID-Project](https://github.com/NicoHood/HID) lib
 * WHEEL_DEAD_ZONE: Is an array defining the values of the dead zones
 
 ### Steering Wheel Feedback:
-* FEEDBACK_IN1_PIN: Digital pin with interruptions (with '~' prefix) for the feedback engine input1 pin (by default ~9)
-* FEEDBACK_IN2_PIN: Digital pin with interruptions (with '~' prefix) for the feedback engine input2 pin (by default ~10)
+* FEEDBACK_PWM_L_PIN: Digital pin for the feedback engine direction left
+* FEEDBACK_PWM_R_PIN: Digital pin for the feedback engine direction right
+* FEEDBACK_EN_L_PIN: Digital pin with interruptions (with '~' prefix) for the feedback engine input1 pin (recommended ~9)
+* FEEDBACK_EN_R_PIN: Digital pin with interruptions (with '~' prefix) for the feedback engine input2 pin (recommended ~10)
 * FEEDBACK_DEAD_ZONE: Constant defining dead zone for starting the engine moving
 * FEEDBACK_MIN_SPEED: The minimum speed of the feedback engine
 * FEEDBACK_MAX_SPEED: The maximum speed of the feedback engine
@@ -31,7 +33,7 @@ The full gamepad API from the [HID-Project](https://github.com/NicoHood/HID) lib
 * PEDAL_BRAKE_PIN: Analog pin for the brake pedal potentiometer
 * PEDAL_CLUTCH_PIN: Analog pin for the clutch pedal potentiometer
 * PEDAL.._DEAD_ZONE: Constants defining dead zones for each pedals
-* PEDAL.._MAX_VALUE: Maximum possible value for the displacement of your pedals potentiometers
+* PEDAL.._MAX_VALUE: Maximum possible value for the displacement of your pedal potentiometers
 
 ## Usage
 This firmware reads inputs from the steering wheel, pedals, and buttons, applies necessary scaling and dead zone adjustments, and can be configured to send these values as gamepad inputs.
