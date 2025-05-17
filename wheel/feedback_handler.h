@@ -1,4 +1,4 @@
-const int FEEDBACK_DEAD_ZONE_VALUE = WHEEL_MAX_VALUE * FEEDBACK_DEAD_ZONE / 100;
+const float FEEDBACK_DEAD_ZONE_VALUE = WHEEL_MAX_VALUE * FEEDBACK_DEAD_ZONE / 100;
 
 const float FEEDBACK_MIN_SPEED_VALUE = PWM_MAX_VALUE * FEEDBACK_MIN_SPEED / 100;
 const float FEEDBACK_MAX_SPEED_VALUE = PWM_MAX_VALUE * FEEDBACK_MAX_SPEED / 100;
@@ -6,12 +6,12 @@ const float FEEDBACK_MAX_SPEED_VALUE = PWM_MAX_VALUE * FEEDBACK_MAX_SPEED / 100;
 const float FEEDBACK_MOVE_COOF = (float)(FEEDBACK_MAX_SPEED_VALUE - FEEDBACK_MIN_SPEED_VALUE) / (float)WHEEL_MAX_VALUE;
 
 volatile bool feedback_direction = false;  // [false: to left, true: to right]
-volatile int feedback_speed = 0;
-volatile int last_feedback_speed = 0;
+volatile float feedback_speed = 0;
+volatile float last_feedback_speed = 0;
 
 // Set feedback motor speed
-void feedback_set_speed(int speed) {
-    speed = constrain(speed, FEEDBACK_MIN_SPEED_VALUE, FEEDBACK_MAX_SPEED_VALUE);
+void feedback_set_speed(float speed) {
+    speed = (int)constrain(speed, FEEDBACK_MIN_SPEED_VALUE, FEEDBACK_MAX_SPEED_VALUE);
     analogWrite9(speed);
     analogWrite10(speed);
 

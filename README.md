@@ -14,7 +14,7 @@ Realized by multi-turn resistor.
 * WHEEL_PIN: Analog pin for the steering wheel potentiometer
 * WHEEL_DEGS_MAX: Maximum angle of your steering wheel's potentiometer (in each direction)
 * WHEEL_DEGS_LIMIT: Maximum steering angle (in each direction)
-* WHEEL_DEAD_ZONE: Is an array defining the values of the dead zones
+* WHEEL_DEAD_ZONE: Constant defining dead zone for starting the wheel moving
 
 ### Steering Wheel Feedback:
 Realized by engine driver BTS7960.
