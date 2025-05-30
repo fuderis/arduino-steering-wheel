@@ -5,8 +5,8 @@ const int WHEEL_PIN = A0;
 const int WHEEL_DEGS_MAX = 1800;       // the max possible degs to the one side
 const int WHEEL_DEGS_LIMIT = 420;      // the limit of degs to the one side [90, 180, 360, 420, 540, 720, 900, or another values..]
 
-const float WHEEL_DEAD_ZONE = 0.55;     // [0.0, 100.0]
- 
+const float WHEEL_DEAD_ZONE = 0.90;     // [0.0, 100.0]
+
 
 // ----------- FEEDBACK MOTOR: --------------
 
@@ -17,8 +17,8 @@ const int FEEDBACK_EN_R_PIN = 10;      // WARNING!: The pin timer must be set to
 
 const float FEEDBACK_DEAD_ZONE = 5.0;  // [0.0, 100.0]
 
-const float FEEDBACK_MIN_SPEED = 55;   // [0.0, 100.0]
-const float FEEDBACK_MAX_SPEED = 70;   // [0.0, 100.0]
+const float FEEDBACK_MIN_SPEED = 52.0;   // [0.0, 100.0]
+const float FEEDBACK_MAX_SPEED = 65.0;   // [0.0, 100.0]
 
 
 // -------------- PEDALS: -------------------

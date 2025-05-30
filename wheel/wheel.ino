@@ -3,7 +3,7 @@
 
 #include "config.h"
 
-const int PWM_MAX_VALUE = 999;
+const int PWM_MAX_VALUE = 799;
 
 // Set PWM pins frequency
 void setupPWMFrequency() {
@@ -11,9 +11,9 @@ void setupPWMFrequency() {
     TCCR1B = 0;
 
     TCCR1A = (1 << COM1A1) | (1 << COM1B1) | (1 << WGM11);
-    TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS10);  // prescaler = 1
+    TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS10);
 
-    ICR1 = PWM_MAX_VALUE;  // 999 для ~16 кГц
+    ICR1 = PWM_MAX_VALUE; // 799 for 20 kHz (16MHz / (1 * (799 + 1)) )
 
     OCR1A = 0;
     OCR1B = 0;

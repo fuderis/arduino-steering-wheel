@@ -1,6 +1,6 @@
-const int TRANSMISSION_UP_BUTTON = 10;
-const int TRANSMISSION_DOWN_BUTTON = 11;
-const int HANDBRAKE_BUTTON = 12;
+const int TRANSMISSION_UP_BUTTON = 1;
+const int TRANSMISSION_DOWN_BUTTON = 2;
+const int HANDBRAKE_BUTTON = 3;
 
 volatile bool transmission_up_pressed = false;
 volatile bool transmission_down_pressed = false;
