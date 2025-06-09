@@ -24,10 +24,10 @@ void analogWrite9(uint16_t duty) {
     OCR1A = constrain(duty, 0, PWM_MAX_VALUE);
 }
 
-// Analog write for pin 10
-void analogWrite10(uint16_t duty) {
-    OCR1B = constrain(duty, 0, PWM_MAX_VALUE);
-}
+// // Analog write for pin 10
+// void analogWrite10(uint16_t duty) {
+//     OCR1B = constrain(duty, 0, PWM_MAX_VALUE);
+// }
 
 #include "wheel_handler.h"
 #include "feedback_handler.h"
@@ -41,10 +41,10 @@ void setup() {
 
     setupPWMFrequency();
 
-    pinMode(FEEDBACK_EN_L_PIN, OUTPUT);
-    pinMode(FEEDBACK_EN_R_PIN, OUTPUT);
     pinMode(FEEDBACK_PWM_L_PIN, INPUT);
     pinMode(FEEDBACK_PWM_R_PIN, INPUT);
+    pinMode(FEEDBACK_EN_L_PIN, OUTPUT);
+    // pinMode(FEEDBACK_EN_R_PIN, OUTPUT);
 
     digitalWrite(FEEDBACK_PWM_L_PIN, LOW);
     digitalWrite(FEEDBACK_PWM_R_PIN, LOW);

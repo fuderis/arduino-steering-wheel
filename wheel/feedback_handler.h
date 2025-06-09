@@ -11,11 +11,9 @@ volatile float last_feedback_speed = 0;
 
 // Set feedback motor speed
 void feedback_set_speed(float speed) {
-    speed = (int)constrain(speed, FEEDBACK_MIN_SPEED_VALUE, FEEDBACK_MAX_SPEED_VALUE);
-    analogWrite9(speed);
-    analogWrite10(speed);
-
-    feedback_speed = speed;
+    feedback_speed = (int)constrain(speed, FEEDBACK_MIN_SPEED_VALUE, FEEDBACK_MAX_SPEED_VALUE);
+    analogWrite9(feedback_speed);
+    // analogWrite10(speed);
 }
 
 // Set feedback motor direction [false: to left, true: to right]
@@ -104,7 +102,7 @@ void feedback_handler() {
         // } else {
         //     feedback_move(feedback_direction, FEEDBACK_MIN_SPEED_VALUE, 0);   // set minimum speed to avoid overheating
         // }
-    } else if (feedback_speed > 0) {
+    } else if (feedback_speed != 0) {
         feedback_stop();
     }
 }
