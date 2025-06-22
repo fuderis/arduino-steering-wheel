@@ -37,7 +37,7 @@ void feedback_set_direction(bool direct) {
 
 // Start feedback motor braking
 void feedback_brake() {
-    feedback_set_speed(FEEDBACK_MAX_SPEED_VALUE);
+    feedback_set_speed(FEEDBACK_MAX_SPEED_VALUE - FEEDBACK_MIN_SPEED_VALUE);
     
     pinMode(FEEDBACK_PWM_L_PIN, OUTPUT);
     digitalWrite(FEEDBACK_PWM_L_PIN, HIGH);
@@ -75,11 +75,6 @@ void feedback_move(bool direct, int speed, int time) {
     feedback_set_direction(direct);
 
     if (feedback_speed != last_feedback_speed) {
-        Serial.print("Feedback moves ");
-        Serial.print(feedback_direction ? "to right" : "to left");
-        Serial.print(" by speed ");
-        Serial.println(feedback_speed);
-
         last_feedback_speed = feedback_speed;
     }
 
@@ -92,16 +87,10 @@ void feedback_move(bool direct, int speed, int time) {
 
 // The steering wheel feedback motor handler
 void feedback_handler() {
-    if (wheel_value < -FEEDBACK_DEAD_ZONE_VALUE || wheel_value > FEEDBACK_DEAD_ZONE_VALUE) {
-        feedback_direction = wheel_value < 0;
+    if (abs(wheel_value) > FEEDBACK_DEAD_ZONE_VALUE) {
+        feedback_direction = !wheel_direction;
         
         feedback_move(feedback_direction, 0, 0);
-
-        // if (feedback_direction == wheel_direction) {
-        //     feedback_move(feedback_direction, 0, 0);
-        // } else {
-        //     feedback_move(feedback_direction, FEEDBACK_MIN_SPEED_VALUE, 0);   // set minimum speed to avoid overheating
-        // }
     } else if (feedback_speed != 0) {
         feedback_stop();
     }

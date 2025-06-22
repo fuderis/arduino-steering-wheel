@@ -34,8 +34,6 @@ void analogWrite9(uint16_t duty) {
 #include "pedals_handler.h"
 #include "transmission_handler.h"
 
-#include "demonstration.h"
-
 void setup() {
     pinMode(WHEEL_PIN, INPUT);
 
@@ -43,8 +41,7 @@ void setup() {
 
     pinMode(FEEDBACK_PWM_L_PIN, INPUT);
     pinMode(FEEDBACK_PWM_R_PIN, INPUT);
-    pinMode(FEEDBACK_EN_L_PIN, OUTPUT);
-    // pinMode(FEEDBACK_EN_R_PIN, OUTPUT);
+    pinMode(FEEDBACK_EN_PIN, OUTPUT);
 
     digitalWrite(FEEDBACK_PWM_L_PIN, LOW);
     digitalWrite(FEEDBACK_PWM_R_PIN, LOW);
@@ -59,8 +56,6 @@ void setup() {
 
     Serial.begin(9600);
     Gamepad.begin();
-
-    // demonstration();
 }
 
 void loop() {
@@ -69,5 +64,5 @@ void loop() {
     pedals_handler();
     transmission_handler();
 
-    delay(10);
+    // delay(5);
 }
