@@ -15,7 +15,7 @@ void wheel_handler() {
     // check dead zone (center):
     if (abs(value) <= WHEEL_DEAD_ZONE_VALUE) {
         wheel_value = 0;
-    } else if (abs(value) >= (abs(wheel_value) + 1.5) || value == 0 && wheel_value != 0) {
+    } else if (value != wheel_value) {
         Gamepad.xAxis( constrain(wheel_value, -WHEEL_MAX_VALUE, WHEEL_MAX_VALUE) * WHEEL_STICK_COOF);
         Gamepad.write();
 
@@ -23,7 +23,6 @@ void wheel_handler() {
         Serial.println(wheel_value);
 
         wheel_value = value;
+        wheel_direction = wheel_value > 0;
     }
-
-    wheel_direction = wheel_value > 0;
 }
