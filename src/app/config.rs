@@ -14,6 +14,7 @@ pub struct Config {
     pub wheel_degs_limit: u16,
     pub wheel_degs_max_possible: u16,
     pub wheel_smooth_rate: f32,
+    pub wheel_reverse_direction: bool,
 
     pub feedback_dead_zone: u16,
     pub feedback_min_speed: u16,
@@ -39,24 +40,25 @@ impl ::std::default::Default for Config {
             com_port: 6,
             baud_rate: 115200,
 
-            wheel_dead_zone: 1100,
+            wheel_dead_zone: 50,
             wheel_degs_limit: 540,
             wheel_degs_max_possible: 1800,
             wheel_smooth_rate: 0.85,
+            wheel_reverse_direction: false,
 
-            feedback_dead_zone: 2500,
+            feedback_dead_zone: 110,
             feedback_min_speed: 435,
             feedback_max_speed: 480,
 
-            gas_dead_zone: 0,
+            gas_dead_zone: 5,
             gas_value_limit: 170,
             gas_smooth_rate: 0.85,
 
-            brake_dead_zone: 0,
+            brake_dead_zone: 5,
             brake_value_limit: 150,
             brake_smooth_rate: 0.85,
             
-            clutch_dead_zone: 0,
+            clutch_dead_zone: 5,
             clutch_value_limit: 60,
             clutch_smooth_rate: 0.85,
         }

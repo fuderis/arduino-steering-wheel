@@ -176,9 +176,13 @@ impl Wheel {
 
         // get feedback direction:
         let feedback_direct =
-            if wheel_centered_value > 0 { Direction::Left }
-            else if wheel_centered_value < 0 { Direction::Right }
-            else { Direction::None };
+            if wheel_centered_value == 0 {
+                Direction::Center
+            } else if (wheel_centered_value > 0) ^ config.wheel_reverse_direction {
+                Direction::Left
+            } else {
+                Direction::Right
+            };
 
         // get vibration value:
         let vibration_value = match x_notify.as_mut().poll(true) {

@@ -6,7 +6,7 @@ use crate::prelude::*;
 pub enum Direction {
     Left,
     Right,
-    None
+    Center
 }
 
 /// The feedback motor properties
