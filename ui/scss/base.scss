@@ -1,0 +1,59 @@
+@import "modules/reset.scss";
+@import "modules/fonts.scss";
+
+$white: #ffffff;
+$black: #000000;
+$gray: #36363B;
+$gray2: #35352a;
+$accent: #00BBFF;
+$bg: #111117;
+
+$thin: 200;
+$normal: 400;
+$medium: 500;
+$bold: 700;
+$extra: 900;
+
+$descr: 12px;
+$para: 14px;
+$head: 25px;
+$head2: 20px;
+$head4: 16px;
+
+$font: 'Roboto Flex';
+
+$scroll: 5px;
+
+body {
+  color: $white;
+  font-family: $font;
+  font-size: $para;
+  font-weight: $normal;
+  background-color: $bg;
+}
+
+h1 {
+  font-size: $head;
+  font-weight: $extra;
+}
+
+h2 {
+  font-size: $head2;
+  font-weight: $bold;
+}
+
+h4 {
+  font-size: $head4;
+  font-weight: $bold;
+}
+
+mark {
+  color: $accent;
+
+  &[disabled] {
+    color: $white;
+  }
+}
+
+@import "modules/scroll.scss";
+@import "modules/form.scss";

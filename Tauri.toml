@@ -1,0 +1,36 @@
+productName = "Arduino Steering Wheel"
+version = "0.1.0"
+identifier = "com.fuderis.steering-wheel"
+
+[build]
+frontendDist = "ui/dist"
+
+[app]
+withGlobalTauri = true
+
+[app.security.csp]
+script-src = "'self' 'wasm-unsafe-eval'"
+
+[[app.windows]]
+url = "views/main.html"
+title = "Test App"
+width = 1000
+height = 650
+resizable = true
+fullscreen = false
+
+[bundle]
+active = true
+targets = "all"
+icon = [
+  "ui/icons/32x32.png",
+  "ui/icons/64x64.png",
+  "ui/icons/128x128.png",
+  "ui/icons/128x128@2x.png",
+  "ui/icons/icon.icns",
+  "ui/icons/icon.ico"
+]
+resources = [
+  "bin",
+  "icon.ico"
+]
