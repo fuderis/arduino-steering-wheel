@@ -2,8 +2,11 @@ use crate::prelude::*;
 use super::{ State, Feedback, Direction };
 
 use std::io::{ BufReader, BufRead };
+use std::sync::atomic::{ AtomicBool, Ordering };
 use serialport::SerialPort;
 use vigem_client::{ Client, TargetId, Xbox360Wired, XGamepad, XButtons, XRequestNotification };
+
+pub static UPDATE_CONFIG: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
 
 /// The steering wheel controller
 pub struct Wheel {
@@ -62,22 +65,28 @@ impl Wheel {
 
         // get the gamepad vibration notifier:
         let mut x_notify = pin!({
-            let mut gamepad = self.gamepad.lock().await;
             gamepad.request_notification()
                 .map_err(|e| Error::FailedToTurnOnGamepad(e))?
         });
 
         // get steering wheel config:
-        let config = App::get_config().clone();
-        let mut prev_state = State::default();
-
+        let mut config = App::get_config().clone();
         // calculating wheel degs limit:
-        let wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / config.wheel_degs_max_possible as f32).round() as u16;
+        let mut wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / config.wheel_degs_max_possible as f32).round() as u16;
+        let mut wheel_limit_to_side = (wheel_limit as f32).round() as u16;
+        // init empty wheel state:
+        let mut prev_state = State::default();
 
         info!("Reading wheel state & emulating gamepad..");
 
         loop {
             line.clear();
+
+            if UPDATE_CONFIG.swap(false, Ordering::SeqCst) {
+                config = App::get_config().clone();
+                wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / config.wheel_degs_max_possible as f32).round() as u16;
+                wheel_limit_to_side = (wheel_limit as f32).round() as u16;
+            }
             
             let mut reader = BufReader::new(&mut **com_port);
             match reader.read_line(&mut line) {
@@ -96,12 +105,17 @@ impl Wheel {
                                 state,
                                 &mut prev_state,
                                 &config,
-                                wheel_limit
+                                wheel_limit,
+                                wheel_limit_to_side,
                             ).await?;
 
                             std::thread::sleep(std::time::Duration::from_millis(10));
-                        },
-                        Err(_) => continue
+                        }
+
+                        Err(_e) => {
+                            // DEBUG: dbg!(_e);
+                            continue
+                        }
                     };
                 }
                 Err(ref e) if e.kind() == std::io::ErrorKind::TimedOut => continue,
@@ -118,7 +132,8 @@ impl Wheel {
         mut state: State,
         prev_state: &mut State,
         config: &Config,
-        wheel_limit: u16
+        wheel_limit: u16,
+        wheel_limit_to_side: u16,
     ) -> Result<State> {
         // filtration potentiometer values:
         state.wheel = Self::filter_value(
@@ -131,6 +146,8 @@ impl Wheel {
         );
         let wheel_centered_value = state.wheel as i16 - 510;
 
+        // DEBUG: dbg!(&wheel_centered_value);
+
         state.gas = Self::filter_value(
             state.gas,
             prev_state.gas,
@@ -139,6 +156,8 @@ impl Wheel {
             config.gas_value_limit,
             config.gas_smooth_rate
         );
+
+        // DEBUG: dbg!(&state.gas);
 
         state.brake = Self::filter_value(
             state.brake,
@@ -192,21 +211,24 @@ impl Wheel {
         
         // calculating feedback power:
         let feedback_power = if wheel_centered_value.abs() > config.feedback_dead_zone as i16 {
-            config.feedback_min_speed
+            config.feedback_min_power
 
             + Self::calculate_wheel_feedback(
-                state.wheel as i16,
+                wheel_centered_value,
+                wheel_limit_to_side,
                 config.feedback_dead_zone,
-                config.feedback_max_speed
+                config.feedback_min_power,
+                config.feedback_max_power,
+                config.feedback_exponent,
             )
 
             + Self::calculate_vibration_feedback(
                 vibration_value,
-                config.feedback_max_speed
+                config.feedback_max_power
             )
         } else {
             0
-        }.clamp(0, config.feedback_max_speed);
+        }.clamp(0, config.feedback_max_power);
 
         let feedback = Feedback {
             motor: feedback_direct,
@@ -245,11 +267,11 @@ impl Wheel {
         let smoothed = (prev_value as f32 * smooth_rate + value as f32 * (1.0 - smooth_rate)).round() as u16;
 
         if dead_zone_from_center {
-            let smoothed = smoothed as i32 - 510;
-            let max_value = max_value as i32;
+            let smoothed = smoothed as i16 - 510;
+            let max_value = max_value as i16;
             
-            if smoothed.abs() > dead_zone as i32 {
-                smoothed.clamp(-max_value, max_value) as u16 + 510
+            if smoothed.abs() > dead_zone as i16 {
+                (smoothed.clamp(-max_value, max_value) + 510) as u16
             } else {
                 510
             }
@@ -263,12 +285,17 @@ impl Wheel {
     }
 
     /// Increase the feedback power by a wheel angle value
-    fn calculate_wheel_feedback(wheel_value: i16, dead_zone: u16, max_feedback: u16) -> u16 {
-        let abs_wheel = wheel_value.abs() as u16;
+    fn calculate_wheel_feedback(wheel_centered_value: i16, wheel_max_value_to_side: u16, feedback_dead_zone: u16, feedback_min_power: u16, feedback_max_power: u16, feedback_exponent: f32) -> u16 {
+        let wheel_value = wheel_centered_value.abs() as u16;
+        
+        if wheel_value > feedback_dead_zone {
+            let wheel_value = wheel_value - feedback_dead_zone;
+            let wheel_max_value = wheel_max_value_to_side - feedback_dead_zone;
+            let feedback_max_power = feedback_max_power - feedback_min_power;
 
-        if abs_wheel > dead_zone {
-            let proportion = (abs_wheel - dead_zone) as f32 / (32767 - dead_zone) as f32;
-            (max_feedback as f32 * proportion.clamp(0.0, 1.0)).round() as u16
+            let proportion = (wheel_value as f32 / wheel_max_value as f32).powf(feedback_exponent);
+
+            (feedback_max_power as f32 * proportion.clamp(0.0, 1.0)).round() as u16
         } else {
             0
         }
