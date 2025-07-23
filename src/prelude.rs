@@ -13,6 +13,7 @@ pub use std::format as fmt;
 pub use std::collections::HashMap;
 pub use std::path::{ Path, PathBuf };
 pub use std::sync::{ Arc, Mutex, MutexGuard };
+pub use std::sync::atomic::{ AtomicBool, Ordering };
 pub use std::pin::{ pin, Pin };
 pub use std::thread::sleep;
 pub use tokio::sync::Mutex as TokioMutex;

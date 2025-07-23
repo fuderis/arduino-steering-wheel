@@ -1,12 +1,9 @@
-use crate::prelude::*;
-use super::{ State, Feedback, Direction };
+use crate::{prelude::*, wheel};
+use super::{ CONFIG_UPDATED, WINDOW_VISIBLE, State, Feedback, Direction };
 
 use std::io::{ BufReader, BufRead };
-use std::sync::atomic::{ AtomicBool, Ordering };
 use serialport::SerialPort;
 use vigem_client::{ Client, TargetId, Xbox360Wired, XGamepad, XButtons, XRequestNotification };
-
-pub static UPDATE_CONFIG: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
 
 /// The steering wheel controller
 pub struct Wheel {
@@ -82,7 +79,7 @@ impl Wheel {
         loop {
             line.clear();
 
-            if UPDATE_CONFIG.swap(false, Ordering::SeqCst) {
+            if CONFIG_UPDATED.swap(false, Ordering::SeqCst) {
                 config = App::get_config().clone();
                 wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / config.wheel_degs_max_possible as f32).round() as u16;
                 wheel_limit_to_side = (wheel_limit as f32).round() as u16;
@@ -146,8 +143,6 @@ impl Wheel {
         );
         let wheel_centered_value = state.wheel as i16 - 510;
 
-        // DEBUG: dbg!(&wheel_centered_value);
-
         state.gas = Self::filter_value(
             state.gas,
             prev_state.gas,
@@ -156,8 +151,6 @@ impl Wheel {
             config.gas_value_limit,
             config.gas_smooth_rate
         );
-
-        // DEBUG: dbg!(&state.gas);
 
         state.brake = Self::filter_value(
             state.brake,
@@ -236,17 +229,42 @@ impl Wheel {
         };
 
         // sending feedback to the motor:
-        self.send_feedback(com_port, feedback).await?;
-
+        self.send_feedback(com_port, &feedback).await?;
         // updating gamepad state:
-        self.update_gamepad(gamepad, gamepad_state).await?;
+        self.update_gamepad(gamepad, &gamepad_state).await?;
+
+        if WINDOW_VISIBLE.load(Ordering::Relaxed) {
+            App::emit_event("update-state", json!(
+                {
+                    "wheel": wheel_centered_value,
+                    "wheel_min": config.wheel_dead_zone,
+                    "wheel_max": wheel_limit_to_side,
+
+                    "feeback": feedback.power,
+                    "feeback_min": config.feedback_min_power,
+                    "feeback_max": config.feedback_max_power,
+
+                    "gas": state.gas,
+                    "gas_min": config.gas_dead_zone,
+                    "gas_max": config.gas_value_limit,
+
+                    "brake": state.brake,
+                    "brake_min": config.brake_dead_zone,
+                    "brake_max": config.brake_value_limit,
+
+                    "clutch": state.clutch,
+                    "clutch_min": config.clutch_dead_zone,
+                    "clutch_max": config.clutch_value_limit,
+                }
+            ));
+        }
 
         Ok(state)
     }
     
     /// Send feedback response
-    async fn send_feedback(&self, com_port: &mut Box<dyn SerialPort + Send>, feedback: Feedback) -> Result<()> {
-        let feedback_json = serde_json::to_string(&feedback).unwrap();
+    async fn send_feedback(&self, com_port: &mut Box<dyn SerialPort + Send>, feedback: &Feedback) -> Result<()> {
+        let feedback_json = serde_json::to_string(feedback).unwrap();
 
         com_port.write_all(feedback_json.as_bytes())?;
         com_port.write_all(b"\n")?;
@@ -255,8 +273,8 @@ impl Wheel {
     }
 
     /// Update gamepad state
-    async fn update_gamepad(&self, gamepad: &mut Xbox360Wired<Arc<Client>>, state: XGamepad) -> Result<()> {        
-        gamepad.update(&state)
+    async fn update_gamepad(&self, gamepad: &mut Xbox360Wired<Arc<Client>>, state: &XGamepad) -> Result<()> {        
+        gamepad.update(state)
             .map_err(|e| Error::FailedToUpdateController(e))?;
 
         Ok(())

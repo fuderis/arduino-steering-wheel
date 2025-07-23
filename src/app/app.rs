@@ -71,7 +71,7 @@ impl App {
     }
 
     /// Sends event to frontend
-    pub fn emit_event(event: &str, payload: impl serde::Serialize + Clone) {
+    pub fn emit_event(event: &str, payload: Value) {
         let guard = APP_HANDLE.lock().unwrap();
 
         if let Some(app) = guard.as_ref() {
