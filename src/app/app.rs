@@ -119,7 +119,10 @@ impl App {
 
     /// Quits from the application
     pub fn exit(code: i32) -> Result<()> {
-        Self::remove_tray()?;
+        Self::save_config().ok();
+        Self::save_logs().ok();
+
+        Self::remove_tray().ok();
         Self::get_app_handle()?.exit(code);
 
         Ok(())

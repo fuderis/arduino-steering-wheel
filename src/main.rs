@@ -1,5 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-use app::{ prelude::*, Wheel };
+use app::{ prelude::*, /* CONFIG_UPDATED, */ WINDOW_VISIBLE, APP_CLOSED, Wheel,  };
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -21,15 +21,12 @@ async fn main() -> Result<()> {
         )
         .invokes(tauri::generate_handler![
         ])
-        .on_close(Arc::new(|| {
-            App::save_config().unwrap();
-            App::save_logs().unwrap();
-            App::remove_tray().unwrap();
-            App::exit(0).unwrap();
-        }))
-        .autostart(None)
+        .on_hide(Arc::new(|| { WINDOW_VISIBLE.swap(false, Ordering::SeqCst); }))
+        .on_show(Arc::new(|| { WINDOW_VISIBLE.swap(true, Ordering::SeqCst); }))
+        .on_close(Arc::new(|| { APP_CLOSED.swap(true, Ordering::SeqCst); }))
+        .autostart(&[])
         // .hide_on_start()
-        .hide_to_tray(true)
+        .hide_to_tray_always()
         .build()?;
 
     Wheel::new()?.spawn_listenner().await?;

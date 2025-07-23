@@ -21,12 +21,13 @@ pub struct AppBuilder {
     pub(super) plugin_autostart_args: Vec<String>,
 
     pub(super) on_start: Option<EventHandler>,
-    pub(super) on_minimize: Option<EventHandler>,
+    pub(super) on_hide: Option<EventHandler>,
+    pub(super) on_show: Option<EventHandler>,
     pub(super) on_close: Option<EventHandler>,
 
     pub(super) hide_on_start: bool,
     pub(super) hide_to_tray: bool,
-    pub(super) hide_to_tray_on_close: bool,
+    pub(super) hide_to_tray_always: bool,
 }
 
 impl ::std::default::Default for AppBuilder {
@@ -47,12 +48,13 @@ impl ::std::default::Default for AppBuilder {
             plugin_autostart_args: vec![],
 
             on_start: None,
-            on_minimize: None,
+            on_hide: None,
+            on_show: None,
             on_close: None,
 
             hide_on_start: false,
             hide_to_tray: false,
-            hide_to_tray_on_close: false,
+            hide_to_tray_always: false,
         }
     }
 }
@@ -114,14 +116,9 @@ impl AppBuilder {
     }
 
     /// Enables the plugin 'autostart'
-    pub fn autostart(mut self, args: Option<&[&str]>) -> Self {
+    pub fn autostart(mut self, args: &[&str]) -> Self {
         self.plugin_autostart = true;
-        self.plugin_autostart_args = if let Some(args) = args.as_ref() {
-            args.into_iter().map(|s| (*s).to_owned()).collect::<Vec<_>>()
-        } else {
-            vec![]
-        };
-
+        self.plugin_autostart_args = args.into_iter().map(|s| (*s).to_owned()).collect::<Vec<_>>();
         self
     }
 
@@ -131,9 +128,15 @@ impl AppBuilder {
         self
     }
 
-    /// Sets the event 'on_minimize' handler
-    pub fn on_minimize(mut self, handler: EventHandler) -> Self {
-        self.on_minimize.replace(handler);
+    /// Sets the event 'on_hide' handler
+    pub fn on_hide(mut self, handler: EventHandler) -> Self {
+        self.on_hide.replace(handler);
+        self
+    }
+
+    /// Sets the event 'on_show' handler
+    pub fn on_show(mut self, handler: EventHandler) -> Self {
+        self.on_show.replace(handler);
         self
     }
 
@@ -150,9 +153,15 @@ impl AppBuilder {
     }
     
     /// Sets the flag hide window to tray
-    pub fn hide_to_tray(mut self, on_close_also: bool) -> Self {
+    pub fn hide_to_tray(mut self) -> Self {
         self.hide_to_tray = true;
-        self.hide_to_tray_on_close = on_close_also;
+        self
+    }
+
+    /// Sets the flag hide window to tray (on close also)
+    pub fn hide_to_tray_always(mut self) -> Self {
+        self.hide_to_tray = true;
+        self.hide_to_tray_always = true;
         self
     }
 
@@ -225,25 +234,34 @@ impl AppBuilder {
 
                                 if let Some(handler) = self.on_close.as_ref() {
                                     (*handler)();
-                                } else if !self.hide_to_tray_on_close {
+                                }
+                                
+                                if self.hide_to_tray_always {
+                                    App::hide_window().ok();
+                                } else {
+                                    App::save_config().unwrap();
+                                    App::save_logs().unwrap();
                                     App::remove_tray().ok();
                                     App::exit(0).ok();
                                 }
-
-                                if self.hide_to_tray_on_close {
-                                    App::hide_window().ok();
-                                }
                             }
 
-                            // set event 'on minimize' handler:
+                            // set event resize handlers:
                             WindowEvent::Resized(_) => {
+                                // on hide:
                                 if window.is_minimized().unwrap_or(false) {
-                                    if let Some(handler) = self.on_minimize.as_ref() {
+                                    if let Some(handler) = self.on_hide.as_ref() {
                                         (*handler)();
                                     }
 
-                                    if self.hide_to_tray {
+                                    if self.hide_to_tray || self.hide_to_tray_always {
                                         App::hide_window().ok();
+                                    }
+                                }
+                                // on show:
+                                else {
+                                    if let Some(handler) = self.on_show.as_ref() {
+                                        (*handler)();
                                     }
                                 }
                             }

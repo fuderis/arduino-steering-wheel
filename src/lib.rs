@@ -2,7 +2,7 @@ pub mod error;    pub use error::{ StdResult, Result, Error };
 pub mod prelude;  pub use prelude::*;
 pub mod app;      pub use app::*;
 
-pub mod wheel;    pub use wheel::{ CONFIG_UPDATED, WINDOW_VISIBLE, Wheel };
+pub mod wheel;    pub use wheel::{ CONFIG_UPDATED, WINDOW_VISIBLE, APP_CLOSED, Wheel };
 
 /// Generates an unique ID
 pub fn uniq_id() -> String {

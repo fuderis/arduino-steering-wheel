@@ -79,6 +79,10 @@ impl Wheel {
         loop {
             line.clear();
 
+            if APP_CLOSED.load(Ordering::SeqCst) {
+                break;
+            }
+
             if CONFIG_UPDATED.swap(false, Ordering::SeqCst) {
                 config = App::get_config().clone();
                 wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / (config.wheel_degs_max_possible * 2) as f32).round() as u16;
@@ -119,6 +123,8 @@ impl Wheel {
                 Err(e) => return Err(e.into())
             }
         }
+
+        Ok(())
     }
 
     /// Handle steering wheel state
@@ -239,7 +245,7 @@ impl Wheel {
         // updating gamepad state:
         self.update_gamepad(gamepad, &gamepad_state).await?;
 
-        if WINDOW_VISIBLE.load(Ordering::Relaxed) {
+        if WINDOW_VISIBLE.load(Ordering::SeqCst) {
             App::emit_event("update-state", json!(
                 {
                     "wheel": wheel_centered_value,
