@@ -6,3 +6,4 @@ use crate::prelude::*;
 
 pub static CONFIG_UPDATED: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
 pub static WINDOW_VISIBLE: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
+pub static APP_CLOSED: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));

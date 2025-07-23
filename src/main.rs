@@ -28,7 +28,7 @@ async fn main() -> Result<()> {
             App::exit(0).unwrap();
         }))
         .autostart(None)
-        .hide_on_start()
+        // .hide_on_start()
         .hide_to_tray(true)
         .build()?;
 

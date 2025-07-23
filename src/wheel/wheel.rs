@@ -1,5 +1,5 @@
 use crate::prelude::*;
-use super::{ CONFIG_UPDATED, WINDOW_VISIBLE, State, Feedback, Direction };
+use super::{ CONFIG_UPDATED, WINDOW_VISIBLE, APP_CLOSED, State, Feedback, Direction };
 
 use std::io::{ BufReader, BufRead };
 use serialport::SerialPort;
@@ -69,7 +69,7 @@ impl Wheel {
         // get steering wheel config:
         let mut config = App::get_config().clone();
         // calculating wheel degs limit:
-        let mut wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / config.wheel_degs_max_possible as f32).round() as u16;
+        let mut wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / (config.wheel_degs_max_possible * 2) as f32).round() as u16;
         let mut wheel_limit_to_side = (wheel_limit as f32).round() as u16;
         // init empty wheel state:
         let mut prev_state = State::default();
@@ -81,7 +81,7 @@ impl Wheel {
 
             if CONFIG_UPDATED.swap(false, Ordering::SeqCst) {
                 config = App::get_config().clone();
-                wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / config.wheel_degs_max_possible as f32).round() as u16;
+                wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / (config.wheel_degs_max_possible * 2) as f32).round() as u16;
                 wheel_limit_to_side = (wheel_limit as f32).round() as u16;
             }
             
@@ -110,7 +110,7 @@ impl Wheel {
                         }
 
                         Err(_e) => {
-                            // DEBUG: dbg!(_e);
+                            // dbg!(_e);  // DEBUG: listenner error
                             continue
                         }
                     };
@@ -139,9 +139,12 @@ impl Wheel {
             config.wheel_dead_zone,
             true,
             wheel_limit,
-            config.wheel_smooth_rate
+            config.wheel_smooth_rate,
+            config.wheel_bias,
         );
         let wheel_centered_value = state.wheel as i16 - 510;
+
+        // dbg!(&wheel_centered_value);  // DEBUG: wheel value
 
         state.gas = Self::filter_value(
             state.gas,
@@ -149,7 +152,8 @@ impl Wheel {
             config.gas_dead_zone,
             false,
             config.gas_value_limit,
-            config.gas_smooth_rate
+            config.gas_smooth_rate,
+            0
         );
 
         state.brake = Self::filter_value(
@@ -158,7 +162,8 @@ impl Wheel {
             config.brake_dead_zone,
             false,
             config.brake_value_limit,
-            config.brake_smooth_rate
+            config.brake_smooth_rate,
+            0
         );
 
         state.clutch = Self::filter_value(
@@ -167,7 +172,8 @@ impl Wheel {
             config.clutch_dead_zone,
             false,
             config.clutch_value_limit,
-            config.clutch_smooth_rate
+            config.clutch_smooth_rate,
+            0
         );
 
         // activating pressed buttons:
@@ -281,10 +287,10 @@ impl Wheel {
     }
 
     /// Filters potentiometer value
-    fn filter_value(value: u16, prev_value: u16, dead_zone: u16, dead_zone_from_center: bool, max_value: u16, smooth_rate: f32) -> u16 {        
+    fn filter_value(value: u16, prev_value: u16, dead_zone: u16, dead_zone_from_center: bool, max_value: u16, smooth_rate: f32, bias: i16) -> u16 {        
         let smoothed = (prev_value as f32 * smooth_rate + value as f32 * (1.0 - smooth_rate)).round() as u16;
 
-        if dead_zone_from_center {
+        let mut value = if dead_zone_from_center {
             let smoothed = smoothed as i16 - 510;
             let max_value = max_value as i16;
             
@@ -299,7 +305,13 @@ impl Wheel {
         }
         else {
             0
+        };
+
+        if bias != 0 {
+            value = (value as i32 + bias as i32).clamp(0, max_value as i32) as u16;
         }
+
+        value
     }
 
     /// Increase the feedback power by a wheel angle value

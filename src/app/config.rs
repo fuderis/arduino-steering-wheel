@@ -10,6 +10,7 @@ pub struct Config {
     pub com_port: u16,
     pub baud_rate: u32,
 
+    pub wheel_bias: i16,
     pub wheel_dead_zone: u16,
     pub wheel_degs_limit: u16,
     pub wheel_degs_max_possible: u16,
@@ -40,6 +41,7 @@ impl ::std::default::Default for Config {
             com_port: 6,
             baud_rate: 115200,
 
+            wheel_bias: 0,
             wheel_dead_zone: 5,
             wheel_degs_limit: 540,
             wheel_degs_max_possible: 1800,

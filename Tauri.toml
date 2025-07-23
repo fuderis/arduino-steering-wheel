@@ -14,9 +14,9 @@ script-src = "'self' 'wasm-unsafe-eval'"
 [[app.windows]]
 url = "views/main.html"
 title = "Test App"
-width = 1000
-height = 650
-resizable = true
+width = 500
+height = 850
+resizable = false
 fullscreen = false
 
 [bundle]
