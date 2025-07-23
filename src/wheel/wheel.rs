@@ -1,4 +1,4 @@
-use crate::{prelude::*, wheel};
+use crate::prelude::*;
 use super::{ CONFIG_UPDATED, WINDOW_VISIBLE, State, Feedback, Direction };
 
 use std::io::{ BufReader, BufRead };
