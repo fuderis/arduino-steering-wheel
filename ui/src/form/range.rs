@@ -4,7 +4,6 @@ use super::Number;
 #[derive(Properties, PartialEq)]
 pub struct RangeProps {
     pub name: String,
-    pub name_id: String,
     pub min: i32,
     pub max: i32,
     pub step: i32,
@@ -29,20 +28,18 @@ pub fn range(props: &RangeProps) -> Html {
         <range {style}>
             <input
                 type="range"
-                name={props.name_id.to_string()}
-                min={props.min.to_string()}
-                max={props.max.to_string()}
-                step={props.step.to_string()}
-                value={props.value.to_string()}
+                name={str!(props.name)}
+                min={str!(props.min)}
+                max={str!(props.max)}
+                step={str!(props.step)}
+                value={str!(props.value)}
                 {oninput}
             />
-            <span class="name">{&props.name}</span>
             <Number
-                name={None::<String>}
-                name_id={props.name_id.clone()}
+                name={str!()}
                 min={props.min}
                 max={props.max}
-                step={5}
+                step={props.step}
                 value={props.value}
                 oninput={props.oninput.clone()}
             />

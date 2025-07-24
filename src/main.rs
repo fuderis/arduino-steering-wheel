@@ -25,11 +25,11 @@ async fn main() -> Result<()> {
         .on_show(Arc::new(|| { WINDOW_VISIBLE.swap(true, Ordering::SeqCst); }))
         .on_close(Arc::new(|| { APP_CLOSED.swap(true, Ordering::SeqCst); }))
         .autostart(&[])
-        // .hide_on_start()
+        .hide_on_start()
         .hide_to_tray_always()
         .build()?;
 
-    Wheel::new()?.spawn_listenner().await?;
+    Wheel::spawn_listenner().await?;
     
     App::run(app)
 }

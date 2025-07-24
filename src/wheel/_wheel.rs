@@ -3,16 +3,47 @@ use super::{ CONFIG_UPDATED, WINDOW_VISIBLE, APP_CLOSED, State, Feedback, Direct
 
 use std::io::{ BufReader, BufRead };
 use serialport::SerialPort;
-use vigem_client::{ Client as VigemClient, TargetId, Xbox360Wired, XGamepad, XButtons, XRequestNotification };
+use vigem_client::{ Client, TargetId, Xbox360Wired, XGamepad, XButtons, XRequestNotification };
 
 /// The steering wheel controller
-pub struct Wheel;
+pub struct Wheel {
+    com_port: Arc<TokioMutex<Box<dyn SerialPort + Send>>>,
+    gamepad: Arc<TokioMutex<Xbox360Wired<Arc<Client>>>>,
+}
 
-impl Wheel {  
+impl Wheel {
+    /// Creates a new steering wheel controller
+    pub fn new() -> Result<Arc<Self>> {
+        // connecting to serial port:
+        let Config { com_port, baud_rate, .. } = App::get_config().clone();
+        let com_port = serialport::new(&fmt!("COM{}", com_port), baud_rate)
+            .timeout(Duration::from_millis(5))
+            .open()
+            .map_err(|e| Error::FailedToGetCOMPort(e))?;
+        
+        // creating a new gamepad device:
+        let client = Arc::new(Client::connect().map_err(|e| Error::NoVigemBusFound(e))?);
+        let gamepad = Xbox360Wired::<Arc<Client>>::new(client, TargetId::XBOX360_WIRED);
+        
+        Ok(Arc::new(Self {
+            com_port: Arc::new(TokioMutex::new(com_port)),
+            gamepad: Arc::new(TokioMutex::new(gamepad)),
+        }))
+    }
+    
     /// Spawns the serial port listenner
-    pub async fn spawn_listenner() -> Result<()> {
+    pub async fn spawn_listenner(self: Arc<Self>) -> Result<()> {
+        // starting the gamepad Xbox360 emulation:
+        {
+            let mut gamepad = self.gamepad.lock().await;
+            gamepad.plugin().map_err(|e| Error::FailedToTurnOnGamepad(e))?;
+            gamepad.wait_ready().map_err(|e| Error::FailedToTurnOnGamepad(e))?;
+        }
+
+        // spawning serial port listenner:
+        let s1 = self.clone();
         tokio::spawn(async move {
-            if let Err(e) = Self::listenner().await {
+            if let Err(e) = s1.listenner().await {
                 err!("serial port listenner panicked with: {e}");
             }
         });
@@ -20,54 +51,26 @@ impl Wheel {
         Ok(())
     }
 
-    /// Connects to the serial port
-    async fn open_com_port() -> Result<Box<dyn SerialPort + Send>> {
-        info!("Connecting to a serial port..");
-        
-        loop {
-            let Config { com_port, baud_rate, .. } = App::get_config().clone();
-
-            let result = serialport::new(&fmt!("COM{}", com_port), baud_rate)
-                .timeout(Duration::from_millis(5))
-                .open()
-                .map_err(|e| Error::FailedToGetCOMPort(e));
-            
-            if let Ok(port) = result {
-                warn!("Connected to the serial port COM{com_port}, {baud_rate}bps!");
-                return Ok(port);
-            } else {
-                tokio_sleep(Duration::from_millis(500)).await;
-            }
-        }
-    }
-
     /// The serial port listenner
-    pub async fn listenner() -> Result<()> {
-        // init serial port:
-        let mut com_port = Self::open_com_port().await?;
+    pub async fn listenner(self: Arc<Self>) -> Result<()> {
+        // get the serial port controller:
+        let mut com_port = self.com_port.lock().await;
         let mut line = String::new();
 
-        // init gamepad emulator:
-        let client = Arc::new(VigemClient::connect().map_err(|e| Error::NoVigemBusFound(e))?);
-        let mut gamepad = Xbox360Wired::<Arc<VigemClient>>::new(client, TargetId::XBOX360_WIRED);
-        {
-            gamepad.plugin().map_err(|e| Error::FailedToTurnOnGamepad(e))?;
-            gamepad.wait_ready().map_err(|e| Error::FailedToTurnOnGamepad(e))?;
-        }
+        // get the gamepad emulator:
+        let mut gamepad = self.gamepad.lock().await;
 
-        // init vibration notifier:
+        // get the gamepad vibration notifier:
         let mut x_notify = pin!({
             gamepad.request_notification()
                 .map_err(|e| Error::FailedToTurnOnGamepad(e))?
         });
 
-        // get config:
+        // get steering wheel config:
         let mut config = App::get_config().clone();
-
         // calculating wheel degs limit:
         let mut wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / (config.wheel_degs_max_possible * 2) as f32).round() as u16;
         let mut wheel_limit_to_side = (wheel_limit as f32).round() as u16;
-        
         // init empty wheel state:
         let mut prev_state = State::default();
 
@@ -81,18 +84,12 @@ impl Wheel {
             }
 
             if CONFIG_UPDATED.swap(false, Ordering::SeqCst) {
-                let new_config = App::get_config().clone();
-
-                if new_config.com_port != config.com_port {
-                    com_port = Self::open_com_port().await?;
-                }
-                config = new_config;
-
+                config = App::get_config().clone();
                 wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / (config.wheel_degs_max_possible * 2) as f32).round() as u16;
                 wheel_limit_to_side = (wheel_limit as f32).round() as u16;
             }
             
-            let mut reader = BufReader::new(&mut com_port);
+            let mut reader = BufReader::new(&mut **com_port);
             match reader.read_line(&mut line) {
                 Ok(0) => continue,
                 Ok(_) => {
@@ -102,7 +99,7 @@ impl Wheel {
                     // parsing wheel state & running handler:
                     match serde_json::from_str::<State>(json) {
                         Ok(state) => {
-                            prev_state = Self::handle_state(
+                            prev_state = self.handle_state(
                                 &mut com_port,
                                 &mut gamepad,
                                 &mut x_notify,
@@ -113,7 +110,7 @@ impl Wheel {
                                 wheel_limit_to_side,
                             ).await?;
 
-                            tokio_sleep(std::time::Duration::from_millis(10)).await;
+                            std::thread::sleep(std::time::Duration::from_millis(10));
                         }
 
                         Err(_e) => {
@@ -123,10 +120,7 @@ impl Wheel {
                     };
                 }
                 Err(ref e) if e.kind() == std::io::ErrorKind::TimedOut => continue,
-                Err(_) => {
-                    warn!("Serial port is disconnected, try to reconnect..");
-                    com_port = Self::open_com_port().await?;
-                },
+                Err(e) => return Err(e.into())
             }
         }
 
@@ -134,9 +128,9 @@ impl Wheel {
     }
 
     /// Handle steering wheel state
-    async fn handle_state(
+    async fn handle_state(&self,
         com_port: &mut Box<dyn SerialPort + Send>,
-        gamepad: &mut Xbox360Wired<Arc<VigemClient>>,
+        gamepad: &mut Xbox360Wired<Arc<Client>>,
         x_notify: &mut Pin<&mut XRequestNotification>,
         mut state: State,
         prev_state: &mut State,
@@ -247,9 +241,9 @@ impl Wheel {
         };
 
         // sending feedback to the motor:
-        Self::send_feedback(com_port, &feedback).await?;
+        self.send_feedback(com_port, &feedback).await?;
         // updating gamepad state:
-        Self::update_gamepad(gamepad, &gamepad_state).await?;
+        self.update_gamepad(gamepad, &gamepad_state).await?;
 
         if WINDOW_VISIBLE.load(Ordering::SeqCst) {
             App::emit_event("update-state", json!(
@@ -281,7 +275,7 @@ impl Wheel {
     }
     
     /// Send feedback response
-    async fn send_feedback(com_port: &mut Box<dyn SerialPort + Send>, feedback: &Feedback) -> Result<()> {
+    async fn send_feedback(&self, com_port: &mut Box<dyn SerialPort + Send>, feedback: &Feedback) -> Result<()> {
         let feedback_json = serde_json::to_string(feedback).unwrap();
 
         com_port.write_all(feedback_json.as_bytes())?;
@@ -291,7 +285,7 @@ impl Wheel {
     }
 
     /// Update gamepad state
-    async fn update_gamepad(gamepad: &mut Xbox360Wired<Arc<VigemClient>>, state: &XGamepad) -> Result<()> {        
+    async fn update_gamepad(&self, gamepad: &mut Xbox360Wired<Arc<Client>>, state: &XGamepad) -> Result<()> {        
         gamepad.update(state)
             .map_err(|e| Error::FailedToUpdateController(e))?;
 

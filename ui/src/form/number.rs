@@ -2,8 +2,7 @@ use crate::prelude::*;
 
 #[derive(Properties, PartialEq)]
 pub struct NumberProps {
-    pub name: Option<String>,
-    pub name_id: String,
+    pub name: String,
     pub min: i32,
     pub max: i32,
     pub step: i32,
@@ -42,24 +41,15 @@ pub fn number(props: &NumberProps) -> Html {
 
     html! {
         <number>
-            {
-                if let Some(name) = &props.name {
-                    html!{ <span class="name">{name}</span> }
-                } else {
-                    html!{}
-                }
-            }
-            <div class="container">
-                <input
-                    type="number"
-                    name={props.name_id.to_string()}
-                    value={props.value.to_string()}
-                    {oninput}
-                />
-                <div class="buttons">
-                    <button name="plus" type="button" onclick={onclick_plus}></button>
-                    <button name="minus" type="button" onclick={onclick_minus}></button>
-                </div>
+            <input
+                type="number"
+                name={str!(props.name)}
+                value={str!(props.value)}
+                {oninput}
+            />
+            <div class="buttons">
+                <button name="plus" type="button" onclick={onclick_plus}></button>
+                <button name="minus" type="button" onclick={onclick_minus}></button>
             </div>
         </number>
     }
