@@ -62,7 +62,7 @@ fn app() -> Html {
                         <Range
                             name={"dead_zone"}
                             min={0}
-                            max={510}
+                            max={255}
                             step={1}
                             value={*dead_zone}
                             oninput={oninput_dead_zone}
