@@ -215,7 +215,7 @@ impl Wheel {
             };
 
         // get vibration value:
-        let vibration_value = match x_notify.as_mut().poll(true) {
+        let _vibration_value = match x_notify.as_mut().poll(true) {
             Ok(Some(notif)) => notif.large_motor.into(),
             _ => 0,
         };
@@ -233,10 +233,10 @@ impl Wheel {
                 config.feedback_exponent,
             )
 
-            + Self::calculate_vibration_feedback(
+            /* + Self::calculate_vibration_feedback(
                 vibration_value,
                 config.feedback_max_power
-            )
+            ) */
         } else {
             0
         }.clamp(0, config.feedback_max_power);
@@ -310,7 +310,7 @@ impl Wheel {
             if value_i16.abs() > dead_zone as i16 {
                 if (prev_i16 > 0 && value_i16 < 0)
                 || (prev_i16 < 0 && value_i16 > 0)
-                || (value_i16 - prev_i16).abs() > 100
+                || (value_i16 - prev_i16).abs() > 30
                 {
                     prev_value
                 } else {
@@ -349,7 +349,7 @@ impl Wheel {
         }
     }
 
-    /// Increase the feedback power by a vibration value
+    /* /// Increase the feedback power by a vibration value
     fn calculate_vibration_feedback(vibration: u32, max_feedback: u16) -> u16 {
         if vibration > 0 {
             let scaled = (vibration as f32) / 65535.0;
@@ -357,7 +357,7 @@ impl Wheel {
         } else {
             0
         }
-    }
+    } */
 
     /// Convert the axis value [min,max] to the gamepad range [-32768..32767]
     fn to_axis_value(value: i16, max: u16) -> i16 {
