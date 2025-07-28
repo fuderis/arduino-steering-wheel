@@ -10,5 +10,6 @@ pub fn uniq_id() -> String {
     
     let millis = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
     let random: u16 = rand::random();
+    
     format!("{}{:04x}", millis, random)
 }

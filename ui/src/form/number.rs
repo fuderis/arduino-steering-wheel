@@ -1,56 +1,96 @@
 use crate::prelude::*;
+use std::{ ops::{ Add, Sub }, str::FromStr };
+use num_traits::ToPrimitive;
 
 #[derive(Properties, PartialEq)]
-pub struct NumberProps {
+pub struct NumberProps<T>
+where
+    T: ToPrimitive + Copy + PartialOrd + Add<Output = T> + Sub<Output = T> + FromStr + ToString + 'static,
+{
+    pub label: String,
     pub name: String,
-    pub min: i32,
-    pub max: i32,
-    pub step: i32,
-    pub value: i32,
-    pub oninput: Callback<i32>,
+    pub min: T,
+    pub max: T,
+    pub step: T,
+    pub value: T,
+    pub oninput: Callback<T>,
 }
 
 #[function_component(Number)]
-pub fn number(props: &NumberProps) -> Html {
+pub fn number<T>(props: &NumberProps<T>) -> Html
+where
+    T: ToPrimitive + Copy + PartialOrd + Add<Output = T> + Sub<Output = T> + FromStr + ToString + 'static,
+{
     let oninput = {
-        let (min, max) = (props.min.clone(), props.max.clone());
+        let (min, max) = (props.min, props.max);
         let oninput = props.oninput.clone();
+
         Callback::from(move |e: InputEvent| {
             let input = e.target_unchecked_into::<web_sys::HtmlInputElement>();
-            oninput.emit((input.value_as_number() as i32).clamp(min, max));
+            let val_str = input.value();
+            if let Ok(val) = T::from_str(&val_str) {
+                let clamped = if val < min {
+                    min
+                } else if val > max {
+                    max
+                } else {
+                    val
+                };
+                oninput.emit(clamped);
+            }
         })
     };
 
     let onclick_plus = {
-        let (min, max, step) = (props.min.clone(), props.max.clone(), props.step.clone());
-        let value = props.value.clone();
+        let (max, step) = (props.max, props.step);
+        let value = props.value;
         let oninput = props.oninput.clone();
+
         Callback::from(move |_| {
-            oninput.emit((value + step).clamp(min, max));
+            let next = value + step;
+            let clamped = if next > max { max } else { next };
+            oninput.emit(clamped);
         })
     };
 
     let onclick_minus = {
-        let (min, max, step) = (props.min.clone(), props.max.clone(), props.step.clone());
-        let value = props.value.clone();
+        let (min, step) = (props.min, props.step);
+        let value = props.value;
         let oninput = props.oninput.clone();
+
         Callback::from(move |_| {
-            oninput.emit((value - step).clamp(min, max));
+            let prev = value - step;
+            let clamped = if prev < min { min } else { prev };
+            oninput.emit(clamped);
         })
     };
 
+    let id = nanoid!();
+
     html! {
-        <number>
-            <input
-                type="number"
-                name={str!(props.name)}
-                value={str!(props.value)}
-                {oninput}
-            />
-            <div class="buttons">
-                <button name="plus" type="button" onclick={onclick_plus}></button>
-                <button name="minus" type="button" onclick={onclick_minus}></button>
+        <div class="field number">
+            {
+                if !props.label.is_empty() {
+                    html! {
+                        <label for={id.clone()} class="name">{str!(&props.label)}</label>
+                    }
+                } else {
+                    html! {}
+                }
+            }
+            <div class="container">
+                <input
+                    id={id.clone()}
+                    type="number"
+                    name={str!(props.name)}
+                    value={str!(props.value)}
+                    {oninput}
+                />
+                <div class="buttons">
+                    <button name="plus" type="button" onclick={onclick_plus}></button>
+                    <button name="minus" type="button" onclick={onclick_minus}></button>
+                </div>
             </div>
-        </number>
+        </div>
     }
 }

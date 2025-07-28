@@ -1,32 +1,223 @@
 form {
-  .title {
-    margin-bottom: 10px;
+  h4.title {
+    margin-bottom: $margin;
+  }
+
+  button[type="submit"] {
+    margin-top: $margin;
   }
   
   .field {
     display: flex;
     width: 100%;
-    height: auto;
+    height: $height;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 5px;
+    padding-left: $padding;
+    border-radius: $radius;
+    color: $white;
+    font-size: $para;
+    font-weight: $normal;
+    user-select: none;
 
     &:last-child {
       margin-bottom: 0;
     }
 
-    &.merged {
-      .name {
-        width: 100%;
-        margin-right: -100%;
-        padding: 0 10px;
-        z-index: 9;
-      }
+    label.name {
+      width: 200px;
+      z-index: 9;
+    }
+    
+    .container {
+      display: inline-flex;
+      justify-content: flex-end;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+  }
 
-      .name ~ * {
-        width: 100%;
+  .field.number {
+    input[type="number"] {
+      width: $width;
+      height: 100%;
+      padding: $padding;
+      text-align: right;
+      background: none;
+      border: $border solid $gray2;
+      border-radius: $radius 0px 0px $radius;
+    }
+    
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      width: auto;
+      height: 100%;
+
+      button {
+        display: block;
+        width: 15px;
+        height: 50%;
+        background-color: $gray2;
+        background-repeat: no-repeat;
+        background-position: center;
+        border-radius: 0;
+        text-shadow: none;
+        box-shadow: none;
+
+        &[name="plus"] {
+          background-image: url("../../imgs/arrow-up.svg");
+          border-radius: 0px 3px 0px 0px;
+        }
+        &[name="minus"] {
+          background-image: url("../../imgs/arrow-down.svg");
+          border-radius: 0px 0px 3px 0px;
+        }
       }
     }
+  }
+
+  .field.range {
+    position: relative;
+    border: $border solid $gray2;
+    --percent: 0%;
+
+    &::after {
+      content: "";
+      display: block;
+      width: var(--percent);
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: $accent;
+      border-radius: calc($radius - 1px);
+      z-index: 8;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 0px;
+      border-radius: 0;
+      border: none;
+    }
+    input[type="range"]::-moz-range-track {
+      background: transparent;
+      border: none;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 0px;
+      border-radius: 0;
+      border: none;
+    }
+    input[type="range"] {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 0;
+      background: transparent;
+      border: none;
+      opacity: 0.2;
+      z-index: 10;
+    }
+
+    .field.number {
+      width: 80px;
+      z-index: 11;
+
+      input[type="number"] {
+        width: 100%;
+        text-align: right;
+        background: none;
+        border: 0;
+      }
+    }
+  }
+
+  .field.select {
+    .selector {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      width: $width;
+      height: 100%;
+      border: $border solid $gray2;
+      border-radius: $radius 0 0 $radius;
+      cursor: pointer;
+
+      .selected {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding: $padding;
+      }
+
+      .items {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: $black2;
+        border: $border solid $gray2;
+        border-radius: $radius;
+        z-index: 12;
+
+        .item {
+          width: 100%;
+          height: $height;
+          justify-content: flex-start;
+          align-items: center;
+          padding: $padding;
+
+          &.active {
+            opacity: 0.5;
+          }
+        }
+      }
+    }
+
+    button[name="show-hide"] {
+      display: block;
+      width: 15px;
+      height: 100%;
+      background-color: $gray2;
+      background-repeat: no-repeat;
+      background-position: center;
+      border-radius: 0;
+      text-shadow: none;
+      box-shadow: none;
+      border-radius: 0px $radius $radius 0px;
+      background-image: url("../../imgs/arrow-down.svg");
+    }
+  }
+}
+
+input {
+  width: $width;
+  height: $height;
+  padding: 0 7px;
+  color: $white;
+  font-size: $para;
+  font-weight: $normal;
+  background: $gray2;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  transition: border 200ms ease;
+  user-select: auto;
+
+  &:hover, &:focus {
+    border: 1px solid $accent;
   }
 }
 
@@ -37,7 +228,7 @@ button {
   font-size: $para;
   font-weight: $medium;
   background: $accent;
-  border-radius: 15px;
+  border-radius: $radius;
   transition: transform 200ms ease;
   transform-origin: center;
   text-shadow: 0 1px 2px rgba($black, 0.7);
@@ -58,22 +249,6 @@ button {
   }
 }
 
-input {
-  width: $width;
-  height: $height;
-  padding: 0 7px;
-  color: $white;
-  font-size: $para;
-  font-weight: $normal;
-  background: $gray2;
-  border: 1px solid transparent;
-  border-radius: 3px;
-  transition: border 200ms ease;
-
-  &:hover, &:focus {
-    border: 1px solid $accent;
-  }
-}
 
 /*
 switch {
@@ -139,202 +314,3 @@ choice {
   }
 }
 */
-
-
-number {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: $width;
-  height: $height;
-  user-select: none;
-
-  .container {
-    display: inline-flex;
-    width: auto;
-    height: 100%;
-  }
-  
-  input[type="number"] {
-    width: 100%;
-    height: 100%;
-    padding: $padding;
-    text-align: right;
-    background: none;
-    border: $border solid $gray2;
-    border-radius: $radius 0px 0px $radius;
-  }
-  
-  .buttons {
-    display: flex;
-    flex-direction: column;
-    width: auto;
-    height: 100%;
-
-    button {
-      display: block;
-      width: 15px;
-      height: 50%;
-      background-color: $gray2;
-      background-repeat: no-repeat;
-      background-position: center;
-      border-radius: 0;
-      text-shadow: none;
-      box-shadow: none;
-
-      &[name="plus"] {
-        background-image: url("../../imgs/arrow-up.svg");
-        border-radius: 0px 3px 0px 0px;
-      }
-      &[name="minus"] {
-        background-image: url("../../imgs/arrow-down.svg");
-        border-radius: 0px 0px 3px 0px;
-      }
-    }
-  }
-}
-
-
-range {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: $width;
-  height: $height;
-  position: relative;
-  padding-left: $padding;
-  background: none;
-  border: $border solid $gray2;
-  border-radius: $radius;
-  --percent: 0%;
-  user-select: none;
-
-  &::after {
-    content: "";
-    display: block;
-    width: var(--percent);
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: $accent;
-    border-radius: calc($radius - 1px);
-    z-index: 8;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 0px;
-    border-radius: 0;
-    border: none;
-  }
-  input[type="range"]::-moz-range-track {
-    background: transparent;
-    border: none;
-  }
-  input[type="range"]::-moz-range-thumb {
-    width: 0px;
-    border-radius: 0;
-    border: none;
-  }
-  
-  input[type="range"] {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 0;
-    background: transparent;
-    border: none;
-    opacity: 0.2;
-    z-index: 10;
-  }
-
-  number {
-    width: 65px;
-    z-index: 11;
-
-    input[type="number"] {
-      width: 100%;
-      height: 100%;
-      padding-right: 10px;
-      text-align: right;
-      background: none;
-      border: 0;
-    }
-  }
-}
-
-
-list {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  width: $width;
-  height: $height;
-  padding-left: $padding;
-  color: $white;
-  font-size: $para;
-  font-weight: $normal;
-  background: $gray2;
-  background: none;
-  border: $border solid $gray2;
-  border-radius: $radius;
-  user-select: none;
-  cursor: pointer;
-
-  .selected {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-
-    .icon {
-      display: block;
-      width: 15px;
-      height: 100%;
-      background-color: $gray2;
-      background-repeat: no-repeat;
-      background-position: center;
-      border-radius: 0;
-      text-shadow: none;
-      box-shadow: none;
-      border-radius: 0px $radius $radius 0px;
-      background-image: url("../../imgs/arrow-down.svg");
-    }
-  }
-
-  .container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: $black2;
-    border: $border solid $gray2;
-    border-radius: $radius;
-
-    .item {
-      width: 100%;
-      height: $height;
-      justify-content: flex-start;
-      align-items: center;
-      padding: $padding;
-
-      &.active {
-        opacity: 0.5;
-      }
-    }
-  }
-}
-
-
-input {
-  user-select: auto;
-}

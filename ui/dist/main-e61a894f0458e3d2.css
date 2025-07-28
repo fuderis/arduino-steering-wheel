@@ -1,0 +1,455 @@
+* {
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  font-style: inherit;
+  box-sizing: border-box;
+  border: 0;
+  outline: none;
+  appearance: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+header, main, aside, footer {
+  display: flex;
+  width: 100%;
+  height: auto;
+}
+
+header, footer {
+  justify-content: space-between;
+  align-items: center;
+}
+
+mark {
+  background: none;
+  border: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+}
+
+label {
+  display: flex;
+  border: 0;
+  user-select: none;
+  cursor: pointer;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+button,
+input[type=button],
+input[type=submit] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+@font-face {
+  font-family: "Roboto Flex";
+  src: url("../../fonts/roboto-flex.ttf") format("truetype");
+}
+body {
+  color: #F3F0FF;
+  font-family: "Roboto Flex";
+  font-size: 14px;
+  font-weight: 400;
+  background-color: #111117;
+}
+
+h1 {
+  font-size: 25px;
+  font-weight: 900;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+mark {
+  color: #4B56D5;
+}
+mark[disabled] {
+  color: #F3F0FF;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 1px solid transparent;
+  background-color: #4B56D5;
+  border-radius: 2.5px;
+}
+
+form h4.title {
+  margin-bottom: 15px;
+}
+form button[type=submit] {
+  margin-top: 15px;
+}
+form .field {
+  display: flex;
+  width: 100%;
+  height: 30px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  padding-left: 10px;
+  border-radius: 3px;
+  color: #F3F0FF;
+  font-size: 14px;
+  font-weight: 400;
+  user-select: none;
+}
+form .field:last-child {
+  margin-bottom: 0;
+}
+form .field label.name {
+  width: 200px;
+  z-index: 9;
+}
+form .field .container {
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+form .field.number input[type=number] {
+  width: 100px;
+  height: 100%;
+  padding: 10px;
+  text-align: right;
+  background: none;
+  border: 1px solid #262937;
+  border-radius: 3px 0px 0px 3px;
+}
+form .field.number .buttons {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  height: 100%;
+}
+form .field.number .buttons button {
+  display: block;
+  width: 15px;
+  height: 50%;
+  background-color: #262937;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 0;
+  text-shadow: none;
+  box-shadow: none;
+}
+form .field.number .buttons button[name=plus] {
+  background-image: url("../../imgs/arrow-up.svg");
+  border-radius: 0px 3px 0px 0px;
+}
+form .field.number .buttons button[name=minus] {
+  background-image: url("../../imgs/arrow-down.svg");
+  border-radius: 0px 0px 3px 0px;
+}
+form .field.range {
+  position: relative;
+  border: 1px solid #262937;
+  --percent: 0%;
+}
+form .field.range::after {
+  content: "";
+  display: block;
+  width: var(--percent);
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #4B56D5;
+  border-radius: 2px;
+  z-index: 8;
+}
+form .field.range input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0px;
+  border-radius: 0;
+  border: none;
+}
+form .field.range input[type=range]::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+form .field.range input[type=range]::-moz-range-thumb {
+  width: 0px;
+  border-radius: 0;
+  border: none;
+}
+form .field.range input[type=range] {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  opacity: 0.2;
+  z-index: 10;
+}
+form .field.range .field.number {
+  width: 80px;
+  z-index: 11;
+}
+form .field.range .field.number input[type=number] {
+  width: 100%;
+  text-align: right;
+  background: none;
+  border: 0;
+}
+form .field.select .selector {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  width: 100px;
+  height: 100%;
+  border: 1px solid #262937;
+  border-radius: 3px 0 0 3px;
+  cursor: pointer;
+}
+form .field.select .selector .selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+form .field.select .selector .items {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #0A0A0A;
+  border: 1px solid #262937;
+  border-radius: 3px;
+  z-index: 12;
+}
+form .field.select .selector .items .item {
+  width: 100%;
+  height: 30px;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px;
+}
+form .field.select .selector .items .item.active {
+  opacity: 0.5;
+}
+form .field.select button[name=show-hide] {
+  display: block;
+  width: 15px;
+  height: 100%;
+  background-color: #262937;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 0;
+  text-shadow: none;
+  box-shadow: none;
+  border-radius: 0px 3px 3px 0px;
+  background-image: url("../../imgs/arrow-down.svg");
+}
+
+input {
+  width: 100px;
+  height: 30px;
+  padding: 0 7px;
+  color: #F3F0FF;
+  font-size: 14px;
+  font-weight: 400;
+  background: #262937;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  transition: border 200ms ease;
+  user-select: auto;
+}
+input:hover, input:focus {
+  border: 1px solid #4B56D5;
+}
+
+button {
+  width: 120px;
+  height: 30px;
+  color: #F3F0FF;
+  font-size: 14px;
+  font-weight: 500;
+  background: #4B56D5;
+  border-radius: 3px;
+  transition: transform 200ms ease;
+  transform-origin: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 1px 10px rgba(75, 86, 213, 0.2);
+}
+button:hover {
+  transform: scale(1.05);
+}
+button:active {
+  transform: translateY(2px);
+}
+button[disabled] {
+  pointer-events: none;
+  opacity: 0.7;
+  cursor: default;
+}
+
+/*
+switch {
+  display: inline-flex;
+
+  input {
+    display: none;
+
+    &:checked ~ label::after {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  label {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
+  }
+}
+
+choice {
+  display: inline-flex;
+
+  input {
+    display: none;
+
+    &:checked ~ label::after {
+      display: block;
+    }
+  }
+
+  label {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 1px solid $gray2;
+    border-radius: 3px;
+
+    &::after {
+      content: "";
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: calc(100% - 2px);
+      height: calc(100% - 2px);
+      background: $accent;
+      border-radius: 2px;
+    }
+  }
+}
+*/
+body {
+  background-color: #000000;
+  background-image: url("../imgs/bg-image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+body > header {
+  justify-content: center;
+  padding: 20px 35px;
+}
+body > header h1 {
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+}
+
+body > main {
+  flex-direction: column;
+  padding: 0 35px;
+}
+
+#settings {
+  width: 100%;
+  height: auto;
+}
+#settings form {
+  align-items: center;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  background: #0A0A0A;
+  border: 1px solid #262626;
+  border-radius: 3px;
+}
+#settings form number {
+  width: 110px;
+}
+#settings form list {
+  width: 110px;
+}
+#settings form input {
+  font-size: 13px;
+  font-weight: 400;
+  color: #DEDEDE;
+}
+
+/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22../../scss/modules/reset.scss%22,%22../../scss/modules/fonts.scss%22,%22../../scss/base.scss%22,%22../../scss/modules/scroll.scss%22,%22../../scss/modules/form.scss%22,%22../../scss/main.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAA;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;;AAGF;EACE;EACA;EACA;EACA;;;AAGF;EACE;EACA;EACA;;;AAGF;EACE;EACA;;;AAGF;EACE;EACA;;;AAGF;EACE;EACA;EACA;EACA;;;AAGF;EACE;EACA;EACA;EACA;;;AAGF;AAAA;EAEE;EACA;;;AAGF;AAAA;AAAA;EAGE;EACA;EACA;EACA;EACA;EACA;EACA;;;ACpEF;EACE;EACA;;ACkCF;EACE,OAlCM;EAmCN,aAdK;EAeL,WApBK;EAqBL,aA3BO;EA4BP,kBA/BG;;;AAkCL;EACE,WAzBK;EA0BL,aA9BM;;;AAiCR;EACE,WA7BM;EA8BN,aApCK;;;AAuCP;EACE,WAjCM;EAkCN,aAzCK;;;AA4CP;EACE,OAnDO;;AAqDP;EACE,OA5DI;;;ACHR;EACE,ODyBO;ECxBP,QDwBO;;;ACrBT;EACE;;;AAGF;EACE;EACA,kBDFO;ECGP;;;ACXA;EACE,eFgCK;;AE7BP;EACE,YF4BK;;AEzBP;EACE;EACA;EACA,QFiBK;EEhBL;EACA;EACA;EACA,cFiBM;EEhBN,eFeK;EEdL,OFfI;EEgBJ;EACA,aFPK;EEQL;;AAEA;EACE;;AAGF;EACE;EACA;;AAGF;EACE;EACA;EACA;EACA;EACA;;AAKF;EACE,OFfE;EEgBF;EACA,SFZI;EEaJ;EACA;EACA;EACA;;AAGF;EACE;EACA;EACA;EACA;;AAEA;EACE;EACA;EACA;EACA,kBFtDA;EEuDA;EACA;EACA;EACA;EACA;;AAEA;EACE;EACA;;AAEF;EACE;EACA;;AAMR;EACE;EACA;EACA;;AAEA;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA,YFrFG;EEsFH;EACA;;AAGF;EACE;EACA;EACA;EACA;EACA;;AAEF;EACE;EACA;;AAEF;EACE;EACA;EACA;;AAEF;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGF;EACE;EACA;;AAEA;EACE;EACA;EACA;EACA;;AAMJ;EACE;EACA;EACA;EACA;EACA,OFvHE;EEwHF;EACA;EACA;EACA;;AAEA;EACE;EACA;EACA;EACA;EACA;EACA,SF9HE;;AEiIJ;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA,YFpKC;EEqKD;EACA,eF5IC;EE6ID;;AAEA;EACE;EACA,QFpJD;EEqJC;EACA;EACA,SFnJA;;AEqJA;EACE;;AAMR;EACE;EACA;EACA;EACA,kBFzLE;EE0LF;EACA;EACA;EACA;EACA;EACA;EACA;;;AAKN;EACE,OFlLM;EEmLN,QFlLO;EEmLP;EACA,OF9MM;EE+MN,WF/LK;EEgML,aFtMO;EEuMP,YF5MM;EE6MN;EACA;EACA;EACA;;AAEA;EACE;;;AAIJ;EACE;EACA,QFpMO;EEqMP,OF/NM;EEgON,WFhNK;EEiNL,aFtNO;EEuNP,YF5NO;EE6NP,eFtMO;EEuMP;EACA;EACA;EACA;;AAEA;EACE;;AAGF;EACE;;AAGF;EACE;EACA;EACA;;;AAKJ;AAAA;AAAA;;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AC1PA;EACE,kBHEM;EGDN;EACA;EACA;EACA;;;AAGF;EACE;EACA;;AAEA;EACE;EACA;EACA;;;AAIJ;EACE;EACA;;;AAGF;EACE;EACA;;AAEA;EACE;EACA;EACA;EACA;EACA;EACA,YH9BK;EG+BL;EACA;;AAEA;EACE;;AAGF;EACE;;AAGF;EACE;EACA;EACA,OH/CG%22,%22file%22:%22main.css%22%7D */
