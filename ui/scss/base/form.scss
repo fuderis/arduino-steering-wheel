@@ -79,6 +79,7 @@ form {
   align-items: center;
   margin-bottom: $margin2;
   padding-left: $padding;
+  border: $border solid $gray2;
   border-radius: $radius;
   color: $white;
   font-size: $para;
@@ -89,17 +90,26 @@ form {
     margin-bottom: 0;
   }
 
-  & > label.name {
+  label.name {
     width: 100%;
     z-index: 9;
+
+    & ~ .container input {
+      border: 0;
+      background: none;
+    }
   }
   
-  & > .container {
+  .container {
     display: inline-flex;
     justify-content: flex-end;
     align-items: center;
     width: 100%;
     height: 100%;
+  }
+
+  button[type="button"] {
+    border: 0;
   }
 
   &.text {
@@ -138,11 +148,11 @@ form {
 
         &[name="plus"] {
           background-image: url("../../imgs/arrow-up.svg");
-          border-radius: 0px $radius 0px 0px;
+          border-radius: 0px ($radius - 1px) 0px 0px;
         }
         &[name="minus"] {
           background-image: url("../../imgs/arrow-down.svg");
-          border-radius: 0px 0px $radius 0px;
+          border-radius: 0px 0px ($radius - 1px) 0px;
         }
       }
     }
@@ -197,6 +207,8 @@ form {
 
     .field.number {
       width: $inputw;
+      border: 0;
+      background: none;
       z-index: 11;
 
       input[type="number"] {
@@ -216,8 +228,6 @@ form {
       position: relative;
       width: calc($inputw - $arrow);
       height: 100%;
-      border: $border solid $gray2;
-      border-radius: $radius 0 0 $radius;
       cursor: pointer;
 
       .selected {
@@ -266,24 +276,35 @@ form {
       border-radius: 0;
       text-shadow: none;
       box-shadow: none;
-      border-radius: 0px $radius $radius 0px;
+      border-radius: 0px ($radius - 1px) ($radius - 1px) 0px;
       background-image: url("../../imgs/arrow-down.svg");
     }
   }
 
   &.check {
+    padding-right: calc($padding2 - 1px);
+
     input[type="checkbox"] {
       display: none;
 
-      &:checked ~ label::after {
+      &:checked ~ label.checkbox::after {
         display: block;
       }
     }
     
-    input[type="checkbox"] ~ label {
+    label.status {
+      margin: $margin2;
+      color: $light;
+
+      &.disabled {
+        opacity: 0.9;
+      }
+    }
+
+    label.checkbox {
       position: relative;
-      width: $checkbox;
-      height: $checkbox;
+      width: $box;
+      height: $box;
       border: $border solid $gray2;
       border-radius: $radius;
 
@@ -293,8 +314,8 @@ form {
         position: absolute;
         top: 0;
         left: 0;
-        width: calc($checkbox - 6px);
-        height: calc($checkbox - 6px);
+        width: calc($box - 6px);
+        height: calc($box - 6px);
         margin: 2px;
         background: $accent;
         border-radius: calc($radius - 1px);
@@ -303,23 +324,32 @@ form {
   }
 
   &.switch {
-    display: inline-flex;
+    padding-right: calc($padding2 - 1px);
     
     input[type="checkbox"] {
       display: none;
 
-      &:checked ~ label::after {
+      &:checked ~ label.checkbox::after {
         left: auto;
         right: 0;
         background: $accent;
       }
     }
+
+    label.status {
+      margin: $margin2;
+      color: $light;
+
+      &.disabled {
+        opacity: 0.9;
+      }
+    }
     
-    input[type="checkbox"] ~ label {
+    label.checkbox {
       display: block;
       position: relative;
-      width: $checkbox * 1.7;
-      height: $checkbox;
+      width: $box * 1.7;
+      height: $box;
       border: $border solid $gray2;
       border-radius: $radius;
 
@@ -329,8 +359,8 @@ form {
         position: absolute;
         top: 0;
         left: 0;
-        width: calc($checkbox - 6px);
-        height: calc($checkbox - 6px);
+        width: calc($box - 6px);
+        height: calc($box - 6px);
         margin: 2px;
         background: $gray2;
         border-radius: calc($radius - 1px);

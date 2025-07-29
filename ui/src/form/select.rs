@@ -39,7 +39,7 @@ pub fn select(props: &SelectProps) -> Html {
             {
                 if !props.label.is_empty() {
                     html! {
-                        <label for={id.clone()} class="name">{str!(&props.label)}</label>
+                        <label class="name" for={id.clone()}>{str!(&props.label)}</label>
                     }
                 } else {
                     html! {}

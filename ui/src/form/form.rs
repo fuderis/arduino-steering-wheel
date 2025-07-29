@@ -206,7 +206,7 @@ pub fn form(props: &FormProps) -> Html {
                             }
                         }
 
-                        FieldKind::Check => {
+                        FieldKind::Check { enabled, disabled } => {
                             let value = match &value {
                                 FieldValue::Bool(v) => v,
                                 _ => panic!("Expected boolean value, found: {value:?}"),
@@ -222,13 +222,15 @@ pub fn form(props: &FormProps) -> Html {
                                 <Check
                                     label={label.clone()}
                                     name={name.clone()}
+                                    enabled={enabled.clone()}
+                                    disabled={disabled.clone()}
                                     checked={value}
                                     oninput={oninput}
                                 />
                             }
                         }
 
-                        FieldKind::Switch => {
+                        FieldKind::Switch { enabled, disabled } => {
                             let value = match &value {
                                 FieldValue::Bool(v) => v,
                                 _ => panic!("Expected boolean value, found: {value:?}"),
@@ -244,6 +246,8 @@ pub fn form(props: &FormProps) -> Html {
                                 <Switch
                                     label={label.clone()}
                                     name={name.clone()}
+                                    enabled={enabled.clone()}
+                                    disabled={disabled.clone()}
                                     checked={value}
                                     oninput={oninput}
                                 />

@@ -41,8 +41,15 @@ pub enum FieldKind {
         items: Vec<(String, String)>,
     },
 
-    Check,
-    Switch,
+    Check {
+        enabled: String,
+        disabled: String,
+    },
+    
+    Switch {
+        enabled: String,
+        disabled: String,
+    },
 }
 
 /// The form field

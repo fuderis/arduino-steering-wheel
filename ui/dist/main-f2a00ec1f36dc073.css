@@ -192,6 +192,7 @@ form button[type=submit] {
   align-items: center;
   margin-bottom: 5px;
   padding-left: 10px;
+  border: 1px solid #262937;
   border-radius: 3px;
   color: #F3F0FF;
   font-size: 14px;
@@ -201,16 +202,23 @@ form button[type=submit] {
 .field:last-child {
   margin-bottom: 0;
 }
-.field > label.name {
+.field label.name {
   width: 100%;
   z-index: 9;
 }
-.field > .container {
+.field label.name ~ .container input {
+  border: 0;
+  background: none;
+}
+.field .container {
   display: inline-flex;
   justify-content: flex-end;
   align-items: center;
   width: 100%;
   height: 100%;
+}
+.field button[type=button] {
+  border: 0;
 }
 .field.text input[type=text] {
   width: 120px;
@@ -243,11 +251,11 @@ form button[type=submit] {
 }
 .field.number .buttons button[name=plus] {
   background-image: url("../../imgs/arrow-up.svg");
-  border-radius: 0px 3px 0px 0px;
+  border-radius: 0px 2px 0px 0px;
 }
 .field.number .buttons button[name=minus] {
   background-image: url("../../imgs/arrow-down.svg");
-  border-radius: 0px 0px 3px 0px;
+  border-radius: 0px 0px 2px 0px;
 }
 .field.range {
   position: relative;
@@ -296,6 +304,8 @@ form button[type=submit] {
 }
 .field.range .field.number {
   width: 120px;
+  border: 0;
+  background: none;
   z-index: 11;
 }
 .field.range .field.number input[type=number] {
@@ -311,8 +321,6 @@ form button[type=submit] {
   position: relative;
   width: 105px;
   height: 100%;
-  border: 1px solid #262937;
-  border-radius: 3px 0 0 3px;
   cursor: pointer;
 }
 .field.select .selector .selected {
@@ -356,23 +364,33 @@ form button[type=submit] {
   border-radius: 0;
   text-shadow: none;
   box-shadow: none;
-  border-radius: 0px 3px 3px 0px;
+  border-radius: 0px 2px 2px 0px;
   background-image: url("../../imgs/arrow-down.svg");
+}
+.field.check {
+  padding-right: 4px;
 }
 .field.check input[type=checkbox] {
   display: none;
 }
-.field.check input[type=checkbox]:checked ~ label::after {
+.field.check input[type=checkbox]:checked ~ label.checkbox::after {
   display: block;
 }
-.field.check input[type=checkbox] ~ label {
+.field.check label.status {
+  margin: 5px;
+  color: #e9e8e8;
+}
+.field.check label.status.disabled {
+  opacity: 0.9;
+}
+.field.check label.checkbox {
   position: relative;
   width: 20px;
   height: 20px;
   border: 1px solid #262937;
   border-radius: 3px;
 }
-.field.check input[type=checkbox] ~ label::after {
+.field.check label.checkbox::after {
   content: "";
   display: none;
   position: absolute;
@@ -385,17 +403,24 @@ form button[type=submit] {
   border-radius: 2px;
 }
 .field.switch {
-  display: inline-flex;
+  padding-right: 4px;
 }
 .field.switch input[type=checkbox] {
   display: none;
 }
-.field.switch input[type=checkbox]:checked ~ label::after {
+.field.switch input[type=checkbox]:checked ~ label.checkbox::after {
   left: auto;
   right: 0;
   background: #4B56D5;
 }
-.field.switch input[type=checkbox] ~ label {
+.field.switch label.status {
+  margin: 5px;
+  color: #e9e8e8;
+}
+.field.switch label.status.disabled {
+  opacity: 0.9;
+}
+.field.switch label.checkbox {
   display: block;
   position: relative;
   width: 34px;
@@ -403,7 +428,7 @@ form button[type=submit] {
   border: 1px solid #262937;
   border-radius: 3px;
 }
-.field.switch input[type=checkbox] ~ label::after {
+.field.switch label.checkbox::after {
   content: "";
   display: block;
   position: absolute;
@@ -447,5 +472,8 @@ body > main {
   width: 100%;
   height: auto;
 }
+#settings form .field.select .selected {
+  justify-content: flex-end;
+}
 
-/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22../../scss/base/reset.scss%22,%22../../scss/base/fonts.scss%22,%22../../scss/base/base.scss%22,%22../../scss/base/scroll.scss%22,%22../../scss/base/form.scss%22,%22../../scss/main.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAA;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;;AAGF;EACE;EACA;EACA;EACA;;;AAGF;EACE;EACA;EACA;;;AAGF;EACE;EACA;;;AAGF;EACE;EACA;;;AAGF;EACE;EACA;EACA;EACA;;;AAGF;EACE;EACA;EACA;EACA;;;AAGF;AAAA;EAEE;EACA;;;AAGF;AAAA;AAAA;EAGE;EACA;EACA;EACA;EACA;EACA;EACA;;;ACpEF;EACE;EACA;;ACqCF;EACE,OArCM;EAsCN,aAjBK;EAkBL,WAvBK;EAwBL,aA9BO;EA+BP,kBAlCG;;;AAqCL;EACE,WA5BK;EA6BL,aAjCM;;;AAoCR;EACE,WAhCM;EAiCN,aAvCK;;;AA0CP;EACE,WApCM;EAqCN,aA5CK;;;AA+CP;EACE,OAtDO;;AAwDP;EACE,OA/DI;;;ACHR;EACE,ODyBO;ECxBP,QDwBO;;;ACrBT;EACE;;;AAGF;EACE;EACA,kBDFO;ECGP;;;ACZF;EACE,OF2BO;EE1BP,QF2BO;EE1BP,SFgCQ;EE/BR,OFDM;EEEN,WFcK;EEbL,aFOO;EENP,YFCM;EEAN;EACA,eFyBO;EExBP;EACA;;AAEA;EACE;;;AAIJ;EACE,OFSO;EERP,QFSO;EERP,OFlBM;EEmBN,WFHK;EEIL,aFTO;EEUP,YFfO;EEgBP;EACA,eFQO;EEPP;EACA;EACA;EACA;;AAEA;EACE;;AAGF;EACE;;AAGF;EACE;EACA;EACA;;;AAIJ;EACE;EACA;EACA;EACA;EACA,SFjBQ;EEkBR,eFjBO;EEkBP,WFnCK;EEoCL,aF1CO;EE2CP,YFlDO;EEmDP;EACA,eFxBO;;AE0BP;EACE;;AAGF;EACE,eF7BK;;AEgCP;EACE,YFjCK;;;AEqCT;EACE;EACA;EACA,QF/CO;EEgDP;EACA;EACA,eF1CQ;EE2CR,cF7CQ;EE8CR,eF/CO;EEgDP,OF/EM;EEgFN,WFhEK;EEiEL,aFvEO;EEwEP;;AAEA;EACE;;AAGF;EACE;EACA;;AAGF;EACE;EACA;EACA;EACA;EACA;;AAIA;EACE,OF9EG;;AEmFL;EACE;EACA;EACA,SF/EI;EEgFJ;EACA;EACA;EACA;;AAGF;EACE;EACA;EACA;EACA;;AAEA;EACE;EACA,OFlGA;EEmGA;EACA,kBF3HA;EE4HA;EACA;EACA;EACA;EACA;;AAEA;EACE;EACA;;AAEF;EACE;EACA;;AAMR;EACE;EACA;EACA;;AAEA;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA,YF1JG;EE2JH;EACA;;AAGF;EACE;EACA;EACA;EACA;EACA;;AAEF;EACE;EACA;;AAEF;EACE;EACA;EACA;;AAEF;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGF;EACE,OF1KG;EE2KH;;AAEA;EACE;EACA;EACA;EACA;;AAMJ;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAEA;EACE;EACA;EACA;EACA;EACA;EACA,SFjME;;AEoMJ;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA,YFzOC;EE0OD;EACA,eF/MC;EEgND;;AAEA;EACE;EACA,QFzND;EE0NC;EACA;EACA,SFtNA;;AEwNA;EACE;;AAMR;EACE;EACA,OFrOE;EEsOF;EACA,kBF9PE;EE+PF;EACA;EACA;EACA;EACA;EACA;EACA;;AAKF;EACE;;AAEA;EACE;;AAIJ;EACE;EACA,OF9PK;EE+PL,QF/PK;EEgQL;EACA,eF7PG;;AE+PH;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA,YFjSC;EEkSD;;AAKN;EACE;;AAEA;EACE;;AAEA;EACE;EACA;EACA,YFhTC;;AEoTL;EACE;EACA;EACA;EACA,QFnSK;EEoSL;EACA,eFjSG;;AEmSH;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA,YFtUA;EEuUA;EACA;;AAKN;EACE;;;ACpVJ;EACE,kBHEM;EGDN;EACA;EACA;EACA;;;AAGF;EACE;EACA;;AAEA;EACE;EACA;EACA;;;AAIJ;EACE;EACA;;;AAGF;EACE;EACA%22,%22file%22:%22main.css%22%7D */
+/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22../../scss/base/reset.scss%22,%22../../scss/base/fonts.scss%22,%22../../scss/base/base.scss%22,%22../../scss/base/scroll.scss%22,%22../../scss/base/form.scss%22,%22../../scss/main.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAA;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;;AAGF;EACE;EACA;EACA;EACA;;;AAGF;EACE;EACA;EACA;;;AAGF;EACE;EACA;;;AAGF;EACE;EACA;;;AAGF;EACE;EACA;EACA;EACA;;;AAGF;EACE;EACA;EACA;EACA;;;AAGF;AAAA;EAEE;EACA;;;AAGF;AAAA;AAAA;EAGE;EACA;EACA;EACA;EACA;EACA;EACA;;;ACpEF;EACE;EACA;;ACwCF;EACE,OAxCM;EAyCN,aAnBK;EAoBL,WAzBK;EA0BL,aAhCO;EAiCP,kBApCG;;;AAuCL;EACE,WA9BK;EA+BL,aAnCM;;;AAsCR;EACE,WAlCM;EAmCN,aAzCK;;;AA4CP;EACE,WAtCM;EAuCN,aA9CK;;;AAiDP;EACE,OAxDO;;AA0DP;EACE,OAlEI;;;ACHR;EACE,OD0BO;ECzBP,QDyBO;;;ACtBT;EACE;;;AAGF;EACE;EACA,kBDDO;ECEP;;;ACZF;EACE,OF4BO;EE3BP,QF4BO;EE3BP,SFkCQ;EEjCR,OFDM;EEEN,WFeK;EEdL,aFQO;EEPP,YFEM;EEDN;EACA,eF0BO;EEzBP;EACA;;AAEA;EACE;;;AAIJ;EACE,OFUO;EETP,QFUO;EETP,OFlBM;EEmBN,WFFK;EEGL,aFRO;EESP,YFdO;EEeP;EACA,eFSO;EERP;EACA;EACA;EACA;;AAEA;EACE;;AAGF;EACE;;AAGF;EACE;EACA;EACA;;;AAIJ;EACE;EACA;EACA;EACA;EACA,SFfQ;EEgBR,eFdO;EEeP,WFlCK;EEmCL,aFzCO;EE0CP,YFlDO;EEmDP;EACA,eFvBO;;AEyBP;EACE;;AAGF;EACE,eF1BK;;AE6BP;EACE,YF9BK;;;AEkCT;EACE;EACA;EACA,QF9CO;EE+CP;EACA;EACA,eFvCQ;EEwCR,cF3CQ;EE4CR;EACA,eF/CO;EEgDP,OFhFM;EEiFN,WFhEK;EEiEL,aFvEO;EEwEP;;AAEA;EACE;;AAGF;EACE;EACA;;AAEA;EACE;EACA;;AAIJ;EACE;EACA;EACA;EACA;EACA;;AAGF;EACE;;AAIA;EACE,OFvFG;;AE4FL;EACE;EACA;EACA,SFvFI;EEwFJ;EACA;EACA;EACA;;AAGF;EACE;EACA;EACA;EACA;;AAEA;EACE;EACA,OF5GA;EE6GA;EACA,kBFpIA;EEqIA;EACA;EACA;EACA;EACA;;AAEA;EACE;EACA;;AAEF;EACE;EACA;;AAMR;EACE;EACA;EACA;;AAEA;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA,YFnKG;EEoKH;EACA;;AAGF;EACE;EACA;EACA;EACA;EACA;;AAEF;EACE;EACA;;AAEF;EACE;EACA;EACA;;AAEF;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA;;AAGF;EACE,OFnLG;EEoLH;EACA;EACA;;AAEA;EACE;EACA;EACA;EACA;;AAMJ;EACE;EACA;EACA;EACA;EACA;EACA;EACA;;AAEA;EACE;EACA;EACA;EACA;EACA;EACA,SFzME;;AE4MJ;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA,YFnPC;EEoPD;EACA,eFxNC;EEyND;;AAEA;EACE;EACA,QFlOD;EEmOC;EACA;EACA,SF9NA;;AEgOA;EACE;;AAMR;EACE;EACA,OF/OE;EEgPF;EACA,kBFvQE;EEwQF;EACA;EACA;EACA;EACA;EACA;EACA;;AAIJ;EACE;;AAEA;EACE;;AAEA;EACE;;AAIJ;EACE,QF/PI;EEgQJ,OFjSE;;AEmSF;EACE;;AAIJ;EACE;EACA,OFjRA;EEkRA,QFlRA;EEmRA;EACA,eFjRG;;AEmRH;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA,YFrTC;EEsTD;;AAKN;EACE;;AAEA;EACE;;AAEA;EACE;EACA;EACA,YFpUC;;AEwUL;EACE,QF3SI;EE4SJ,OF7UE;;AE+UF;EACE;;AAIJ;EACE;EACA;EACA;EACA,QF/TA;EEgUA;EACA,eF9TG;;AEgUH;EACE;EACA;EACA;EACA;EACA;EACA;EACA;EACA;EACA,YFnWA;EEoWA;EACA;;AAKN;EACE;;;AClXJ;EACE,kBHEM;EGDN;EACA;EACA;EACA;;;AAGF;EACE;EACA;;AAEA;EACE;EACA;EACA;;;AAIJ;EACE;EACA;;;AAGF;EACE;EACA;;AAEA;EACE%22,%22file%22:%22main.css%22%7D */

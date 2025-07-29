@@ -27,4 +27,8 @@ body > main {
 #settings {
   width: 100%;
   height: auto;
+
+  form .field.select .selected {
+    justify-content: flex-end;
+  }
 }

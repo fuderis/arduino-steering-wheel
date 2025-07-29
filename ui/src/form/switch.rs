@@ -5,6 +5,8 @@ use crate::prelude::*;
 pub struct SwitchProps {
     pub label: String,
     pub name: String,
+    pub enabled: String,
+    pub disabled: String,
     pub checked: bool,
     pub oninput: Callback<bool>,
 }
@@ -30,7 +32,7 @@ pub fn switch(props: &SwitchProps) -> Html {
             {
                 if !props.label.is_empty() {
                     html! {
-                        <label for={id.clone()} class="name">{str!(&props.label)}</label>
+                        <label class="name" for={id.clone()}>{str!(&props.label)}</label>
                     }
                 } else {
                     html! {}
@@ -44,7 +46,24 @@ pub fn switch(props: &SwitchProps) -> Html {
                     checked={props.checked}
                     {oninput}
                 />
-                <label for={id.clone()}></label>
+                {
+                    if props.checked && !props.enabled.is_empty() {
+                        html! {
+                            <label class="status enabled" for={id.clone()}>
+                                {&props.enabled}
+                            </label>
+                        }
+                    } else if !props.checked && !props.disabled.is_empty() {
+                        html! {
+                            <label class="status disabled" for={id.clone()}>
+                                {&props.disabled}
+                            </label>
+                        }
+                    } else {
+                        html! {}
+                    }
+                }
+                <label class="checkbox" for={id.clone()}></label>
             </div>
         </div>
     }

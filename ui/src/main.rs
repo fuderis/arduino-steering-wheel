@@ -71,7 +71,10 @@ fn app() -> Html {
                         Field {
                             name: str!("wheel_reverse_direction"),
                             label: str!("Reverse direction"),
-                            kind: FieldKind::Check,
+                            kind: FieldKind::Check {
+                                enabled: str!("Enabled"),
+                                disabled: str!("Disabled"),
+                            },
                             value: FieldValue::Bool(false),
                         },
                     ]}
