@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-/// The form field value
+/// Form field value
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FieldValue {
@@ -10,7 +10,7 @@ pub enum FieldValue {
     Bool(bool),
 }
 
-/// The form field kind
+/// Form field kind
 #[derive(Clone, PartialEq)]
 pub enum FieldKind {
     Text,

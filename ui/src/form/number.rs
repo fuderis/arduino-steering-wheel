@@ -2,7 +2,7 @@ use crate::prelude::*;
 use std::{ ops::{ Add, Sub }, str::FromStr };
 use num_traits::ToPrimitive;
 
-/// The input number properties
+/// Input number properties
 #[derive(Properties, PartialEq)]
 pub struct NumberProps<T>
 where
@@ -17,7 +17,7 @@ where
     pub oninput: Callback<T>,
 }
 
-/// The input number component
+/// Input number component
 #[function_component(Number)]
 pub fn number<T>(props: &NumberProps<T>) -> Html
 where

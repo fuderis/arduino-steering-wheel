@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-/// The input select properties
+/// Input select properties
 #[derive(Properties, PartialEq)]
 pub struct SelectProps {
     pub label: String,
@@ -10,7 +10,7 @@ pub struct SelectProps {
     pub oninput: Callback<String>,
 }
 
-/// The input select component
+/// Input select component
 #[function_component(Select)]
 pub fn select(props: &SelectProps) -> Html {
     let active = use_state(|| props.active.clone());

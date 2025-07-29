@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-/// The input checkbox properties
+/// Input checkbox properties
 #[derive(Properties, PartialEq)]
 pub struct CheckProps {
     pub label: String,
@@ -9,7 +9,7 @@ pub struct CheckProps {
     pub oninput: Callback<bool>,
 }
 
-/// The input checkbox component
+/// Input checkbox component
 #[function_component(Check)]
 pub fn checkbox(props: &CheckProps) -> Html {
     let oninput = {

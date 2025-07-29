@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-/// The input checkbox (switcher style) properties
+/// Input checkbox (switcher style) properties
 #[derive(Properties, PartialEq)]
 pub struct SwitchProps {
     pub label: String,
@@ -9,7 +9,7 @@ pub struct SwitchProps {
     pub oninput: Callback<bool>,
 }
 
-/// The input checkbox (switcher style) component
+/// Input checkbox (switcher style) component
 #[function_component(Switch)]
 pub fn switch(props: &SwitchProps) -> Html {
     let oninput = {

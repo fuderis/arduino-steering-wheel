@@ -3,7 +3,7 @@ use super::Number;
 use std::{ ops::{ Add, Sub }, str::FromStr };
 use num_traits::ToPrimitive;
 
-/// The input range properties
+/// Input range properties
 #[derive(Properties, PartialEq)]
 pub struct RangeProps<T>
 where
@@ -18,7 +18,7 @@ where
     pub oninput: Callback<T>,
 }
 
-/// The input range component
+/// Input range component
 #[function_component(Range)]
 pub fn range<T>(props: &RangeProps<T>) -> Html
 where

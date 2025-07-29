@@ -2,7 +2,7 @@ use crate::prelude::*;
 use super::*;
 use web_sys::SubmitEvent;
 
-/// The form properties
+/// Form properties
 #[derive(Properties, PartialEq)]
 pub struct FormProps {
     pub name: String,
@@ -13,7 +13,7 @@ pub struct FormProps {
     pub onsubmit: Callback<(String, Vec<Field>)>,
 }
 
-/// The form component
+/// Form component
 #[function_component(Form)]
 pub fn form(props: &FormProps) -> Html {
     let fields_state = use_state(|| props.fields.clone());

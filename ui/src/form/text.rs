@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-/// The input text properties
+/// Input text properties
 #[derive(Properties, PartialEq)]
 pub struct TextProps {
     pub label: String,
@@ -9,7 +9,7 @@ pub struct TextProps {
     pub oninput: Callback<String>,
 }
 
-/// The input text component
+/// Input text component
 #[function_component(Text)]
 pub fn text(props: &TextProps) -> Html {
     let oninput = {
