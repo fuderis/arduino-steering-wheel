@@ -25,8 +25,8 @@ fn app() -> Html {
         <main>
             <div id="settings">
                 <Form
-                    name="com-port-settings"
-                    title={"COM Port:"}
+                    name="comport-settings"
+                    title="COM Port:"
                     fields={vec![
                         Field {
                             name: str!("com_port"),
@@ -49,17 +49,17 @@ fn app() -> Html {
                             value: FieldValue::Str(str!("115200")),
                         },
                     ]}
-                    button="Save"
+                    button=""
                     oninput={&oninput}
                     onsubmit={&onsubmit}
                 />
 
                 <Form
                     name="wheel-settings"
-                    title={"Wheel Settings:"}
+                    title="Wheel Settings:"
                     fields={vec![
                         Field {
-                            name: str!("dead_zone"),
+                            name: str!("wheel_dead_zone"),
                             label: str!("Dead zone"),
                             kind: FieldKind::Range {
                                 min: 0,
@@ -68,8 +68,14 @@ fn app() -> Html {
                             },
                             value: FieldValue::Int(5),
                         },
+                        Field {
+                            name: str!("wheel_reverse_direction"),
+                            label: str!("Reverse direction"),
+                            kind: FieldKind::Check,
+                            value: FieldValue::Bool(false),
+                        },
                     ]}
-                    button="Save"
+                    button=""
                     oninput={&oninput}
                     onsubmit={&onsubmit}
                 />

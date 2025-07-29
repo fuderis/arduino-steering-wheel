@@ -1,5 +1,5 @@
-@import "modules/reset.scss";
-@import "modules/fonts.scss";
+@import "reset.scss";
+@import "fonts.scss";
 
 $white: #F3F0FF;
 $white2: #DEDEDE;
@@ -26,13 +26,16 @@ $font: 'Roboto Flex';
 
 $scroll: 5px;
 
-$width: 100px;
-$height: 30px;
+$inputw: 120px;
+$inputh: 30px;
+$checkbox: 20px;
+$arrow: 15px;
 
 $border: 1px;
 $radius: 3px;
 $padding: 10px;
 $margin: 15px;
+$margin2: 5px;
 
 body {
   color: $white;
@@ -65,5 +68,5 @@ mark {
   }
 }
 
-@import "modules/scroll.scss";
-@import "modules/form.scss";
+@import "scroll.scss";
+@import "form.scss";

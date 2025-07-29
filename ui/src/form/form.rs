@@ -2,6 +2,7 @@ use crate::prelude::*;
 use super::*;
 use web_sys::SubmitEvent;
 
+/// The form properties
 #[derive(Properties, PartialEq)]
 pub struct FormProps {
     pub name: String,
@@ -12,11 +13,12 @@ pub struct FormProps {
     pub onsubmit: Callback<(String, Vec<Field>)>,
 }
 
+/// The form component
 #[function_component(Form)]
 pub fn form(props: &FormProps) -> Html {
     let fields_state = use_state(|| props.fields.clone());
 
-    let oninput_field = {
+    let oninput = {
         let form_name = props.name.clone();
         let fields_state = fields_state.clone();
         let oninput = props.oninput.clone();
@@ -56,18 +58,38 @@ pub fn form(props: &FormProps) -> Html {
                     let name = name.clone();
                     let label = label.clone();
                     let value = value.clone();
-                    let oninput = oninput_field.clone();
+                    let oninput = oninput.clone();
                     
                     match &kind {
-                        FieldKind::Number { min, max, step } => {
-                            let value = match value {
-                                FieldValue::Int(v) => v,
-                                _ => *min,
+                        FieldKind::Text => {
+                            let value = match &value {
+                                FieldValue::Str(v) => v.clone(),
+                                _ => panic!("Expected string value, found: {value:?}"),
                             };
                             let oninput = {
-                                let name = name.clone();
-                                let oninput = oninput.clone();
+                                let (name, oninput) = (name.clone(), oninput.clone());
+                                Callback::from(move |v: String| {
+                                    oninput.emit((name.clone(), FieldValue::Str(v)));
+                                })
+                            };
 
+                            html! {
+                                <Text
+                                    label={label.clone()}
+                                    name={name.clone()}
+                                    value={value}
+                                    oninput={oninput}
+                                />
+                            }
+                        }
+
+                        FieldKind::Number { min, max, step } => {
+                            let value = match &value {
+                                FieldValue::Int(v) => v,
+                                _ => panic!("Expected integer value, found: {value:?}"),
+                            };
+                            let oninput = {
+                                let (name, oninput) = (name.clone(), oninput.clone());
                                 Callback::from(move |v: i32| {
                                     oninput.emit((name.clone(), FieldValue::Int(v)));
                                 })
@@ -86,15 +108,88 @@ pub fn form(props: &FormProps) -> Html {
                             }
                         }
 
+                        FieldKind::NumberFloat { min, max, step } => {
+                            let value = match &value {
+                                FieldValue::Float(v) => v,
+                                _ => panic!("Expected float value, found: {value:?}"),
+                            };
+                            let oninput = {
+                                let (name, oninput) = (name.clone(), oninput.clone());
+                                Callback::from(move |v: f32| {
+                                    oninput.emit((name.clone(), FieldValue::Float(v)));
+                                })
+                            };
+
+                            html! {
+                                <Number<f32>
+                                    label={label.clone()}
+                                    name={name.clone()}
+                                    min={min}
+                                    max={max}
+                                    step={step}
+                                    value={value}
+                                    oninput={oninput}
+                                />
+                            }
+                        }
+
+                        FieldKind::Range { min, max, step } => {
+                            let value = match &value {
+                                FieldValue::Int(v) => v,
+                                _ => panic!("Expected integer value, found: {value:?}"),
+                            };
+                            let oninput = {
+                                let (name, oninput) = (name.clone(), oninput.clone());
+                                Callback::from(move |v: i32| {
+                                    oninput.emit((name.clone(), FieldValue::Int(v)));
+                                })
+                            };
+
+                            html! {
+                                <Range<i32>
+                                    label={label.clone()}
+                                    name={name.clone()}
+                                    min={min}
+                                    max={max}
+                                    step={step}
+                                    value={value}
+                                    oninput={oninput}
+                                />
+                            }
+                        }
+                        
+                        FieldKind::RangeFloat { min, max, step } => {
+                            let value = match &value {
+                                FieldValue::Float(v) => v,
+                                _ => panic!("Expected float value, found: {value:?}"),
+                            };
+                            let oninput = {
+                                let (name, oninput) = (name.clone(), oninput.clone());
+                                Callback::from(move |v: f32| {
+                                    oninput.emit((name.clone(), FieldValue::Float(v)));
+                                })
+                            };
+
+                            html! {
+                                <Range<f32>
+                                    label={label.clone()}
+                                    name={name.clone()}
+                                    min={min}
+                                    max={max}
+                                    step={step}
+                                    value={value}
+                                    oninput={oninput}
+                                />
+                            }
+                        }
+
                         FieldKind::Select { items } => {
                             let value = match &value {
                                 FieldValue::Str(s) => s.clone(),
-                                _ => "".into(),
+                                _ => panic!("Expected string value, found: {value:?}"),
                             };
                             let oninput = {
-                                let name = name.clone();
-                                let oninput = oninput.clone();
-
+                                let (name, oninput) = (name.clone(), oninput.clone());
                                 Callback::from(move |v: String| {
                                     oninput.emit((name.clone(), FieldValue::Str(v)));
                                 })
@@ -111,28 +206,45 @@ pub fn form(props: &FormProps) -> Html {
                             }
                         }
 
-                        FieldKind::Range { min, max, step } => {
-                            let value = match value {
-                                FieldValue::Int(v) => v,
-                                _ => *min,
+                        FieldKind::Check => {
+                            let value = match &value {
+                                FieldValue::Bool(v) => v,
+                                _ => panic!("Expected boolean value, found: {value:?}"),
                             };
                             let oninput = {
-                                let name = name.clone();
-                                let oninput = oninput.clone();
-
-                                Callback::from(move |v: i32| {
-                                    oninput.emit((name.clone(), FieldValue::Int(v)));
+                                let (name, oninput) = (name.clone(), oninput.clone());
+                                Callback::from(move |v: bool| {
+                                    oninput.emit((name.clone(), FieldValue::Bool(v)));
                                 })
                             };
 
                             html! {
-                                <Range<i32>
+                                <Check
                                     label={label.clone()}
                                     name={name.clone()}
-                                    min={min}
-                                    max={max}
-                                    step={step}
-                                    value={value}
+                                    checked={value}
+                                    oninput={oninput}
+                                />
+                            }
+                        }
+
+                        FieldKind::Switch => {
+                            let value = match &value {
+                                FieldValue::Bool(v) => v,
+                                _ => panic!("Expected boolean value, found: {value:?}"),
+                            };
+                            let oninput = {
+                                let (name, oninput) = (name.clone(), oninput.clone());
+                                Callback::from(move |v: bool| {
+                                    oninput.emit((name.clone(), FieldValue::Bool(v)));
+                                })
+                            };
+
+                            html! {
+                                <Switch
+                                    label={label.clone()}
+                                    name={name.clone()}
+                                    checked={value}
                                     oninput={oninput}
                                 />
                             }

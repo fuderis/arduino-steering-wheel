@@ -1,4 +1,4 @@
-@import "base.scss";
+@import "base/base.scss";
 
 body {
   background-color: $black;
@@ -10,7 +10,7 @@ body {
 
 body > header {
   justify-content: center;
-  padding: 20px 35px;
+  padding: 20px;
 
   h1 {
     font-size: 20px;
@@ -27,29 +27,4 @@ body > main {
 #settings {
   width: 100%;
   height: auto;
-
-  form {
-    align-items: center;
-    padding: 10px;
-    margin-top: 10px;
-    font-size: 14px;
-    font-weight: 500;
-    background: $black2;
-    border: 1px solid $gray;
-    border-radius: 3px;
-
-    number {
-      width: 110px;
-    }
-
-    list {
-      width: 110px;
-    }
-
-    input {
-      font-size: 13px;
-      font-weight: 400;
-      color: $white2;
-    }
-  }
 }

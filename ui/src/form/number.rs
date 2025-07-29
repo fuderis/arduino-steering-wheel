@@ -2,6 +2,7 @@ use crate::prelude::*;
 use std::{ ops::{ Add, Sub }, str::FromStr };
 use num_traits::ToPrimitive;
 
+/// The input number properties
 #[derive(Properties, PartialEq)]
 pub struct NumberProps<T>
 where
@@ -16,6 +17,7 @@ where
     pub oninput: Callback<T>,
 }
 
+/// The input number component
 #[function_component(Number)]
 pub fn number<T>(props: &NumberProps<T>) -> Html
 where
@@ -36,6 +38,7 @@ where
                 } else {
                     val
                 };
+
                 oninput.emit(clamped);
             }
         })
@@ -49,6 +52,7 @@ where
         Callback::from(move |_| {
             let next = value + step;
             let clamped = if next > max { max } else { next };
+            
             oninput.emit(clamped);
         })
     };
@@ -61,6 +65,7 @@ where
         Callback::from(move |_| {
             let prev = value - step;
             let clamped = if prev < min { min } else { prev };
+            
             oninput.emit(clamped);
         })
     };

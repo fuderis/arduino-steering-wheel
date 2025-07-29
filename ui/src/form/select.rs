@@ -1,5 +1,6 @@
 use crate::prelude::*;
 
+/// The input select properties
 #[derive(Properties, PartialEq)]
 pub struct SelectProps {
     pub label: String,
@@ -9,6 +10,7 @@ pub struct SelectProps {
     pub oninput: Callback<String>,
 }
 
+/// The input select component
 #[function_component(Select)]
 pub fn select(props: &SelectProps) -> Html {
     let active = use_state(|| props.active.clone());
@@ -18,12 +20,11 @@ pub fn select(props: &SelectProps) -> Html {
         let expanded = expanded.clone();
         Callback::from(move |_| expanded.set(!*expanded))
     };
-    let onclick2 = onclick.clone();
 
     let onselect = {
-        let active = active.clone();
-        let expanded = expanded.clone();
+        let (active, expanded) = (active.clone(), expanded.clone());
         let oninput = props.oninput.clone();
+
         Callback::from(move |val: String| {
             active.set(val.clone());
             expanded.set(false);
@@ -46,11 +47,11 @@ pub fn select(props: &SelectProps) -> Html {
             }
             <div class="container">
                 <div class="selector">
-                    <div class="selected" {onclick}>
+                    <label for={id.clone()} class="selected">
                         {
                             props.items.iter().find(|(value, _)| value == &*active).unwrap().1.clone()
                         }
-                    </div>
+                    </label>
                     <div class="items" style={format!("display: {}", if *expanded {"flex"} else {"none"})}>
                         {
                             for props.items.iter().map(|(value, text)| {
@@ -85,8 +86,8 @@ pub fn select(props: &SelectProps) -> Html {
                 <button
                     id={id.clone()}
                     type="button"
-                    name="show-hide"
-                    onclick={onclick2}
+                    name="visible"
+                    {onclick}
                 ></button>
             </div>
         </div>

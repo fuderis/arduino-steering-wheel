@@ -3,6 +3,7 @@ use super::Number;
 use std::{ ops::{ Add, Sub }, str::FromStr };
 use num_traits::ToPrimitive;
 
+/// The input range properties
 #[derive(Properties, PartialEq)]
 pub struct RangeProps<T>
 where
@@ -17,6 +18,7 @@ where
     pub oninput: Callback<T>,
 }
 
+/// The input range component
 #[function_component(Range)]
 pub fn range<T>(props: &RangeProps<T>) -> Html
 where
@@ -28,8 +30,8 @@ where
 
         Callback::from(move |e: InputEvent| {
             let input = e.target_unchecked_into::<web_sys::HtmlInputElement>();
-
             let val_str = input.value();
+
             if let Ok(val) = T::from_str(&val_str) {
                 let clamped = if val < min {
                     min
@@ -38,6 +40,7 @@ where
                 } else {
                     val
                 };
+
                 oninput.emit(clamped);
             }
         })
