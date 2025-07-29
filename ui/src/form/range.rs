@@ -1,5 +1,5 @@
 use crate::prelude::*;
-use super::Number;
+use super::{ Number, round_to_2 };
 use std::{ ops::{ Add, Sub }, str::FromStr };
 use num_traits::ToPrimitive;
 
@@ -41,12 +41,18 @@ where
                     val
                 };
 
-                oninput.emit(clamped);
+                oninput.emit(round_to_2(clamped));
             }
         })
     };
 
-    let percent = (props.value.to_f64().unwrap_or_default() / props.max.to_f64().unwrap_or(1.0)) * 100.0;
+    let (min, max, value) = (
+        props.min.to_f64().unwrap_or_default(),
+        props.max.to_f64().unwrap_or(1.0),
+        props.value.to_f64().unwrap_or_default()
+    );
+    
+    let percent = ((value - min) / (max - min)) * 100.0;
     let style = fmt!("--percent:{percent}%;");
 
     let id = nanoid!();

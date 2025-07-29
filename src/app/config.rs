@@ -42,14 +42,14 @@ impl ::std::default::Default for Config {
             baud_rate: 115200,
 
             wheel_bias: 0,
-            wheel_dead_zone: 5,
+            wheel_dead_zone: 6,
             wheel_degs_limit: 540,
-            wheel_degs_max_possible: 1800,
+            wheel_degs_max_possible: 1980,
             wheel_smooth_rate: 0.6,
             wheel_reverse_direction: false,
 
-            feedback_dead_zone: 15,
-            feedback_min_power: 435,
+            feedback_dead_zone: 10,
+            feedback_min_power: 470,
             feedback_max_power: 480,
             feedback_exponent: 1.8,
 

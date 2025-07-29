@@ -64,9 +64,39 @@ fn app() -> Html {
                             kind: FieldKind::Range {
                                 min: 0,
                                 max: 255,
-                                step: 5,
+                                step: 1,
                             },
                             value: FieldValue::Int(5),
+                        },
+                        Field {
+                            name: str!("wheel_degs_limit"),
+                            label: str!("Degs limit"),
+                            kind: FieldKind::Range {
+                                min: 90,
+                                max: 1080,
+                                step: 30,
+                            },
+                            value: FieldValue::Int(540),
+                        },
+                        Field {
+                            name: str!("wheel_degs_max_possible"),
+                            label: str!("Degs (max possible)"),
+                            kind: FieldKind::Range {
+                                min: 180,
+                                max: 1980,
+                                step: 30,
+                            },
+                            value: FieldValue::Int(1980),
+                        },
+                        Field {
+                            name: str!("wheel_smooth_rate"),
+                            label: str!("Smooth rate"),
+                            kind: FieldKind::RangeFloat {
+                                min: 0.0,
+                                max: 0.95,
+                                step: 0.05,
+                            },
+                            value: FieldValue::Float(0.6),
                         },
                         Field {
                             name: str!("wheel_reverse_direction"),
@@ -82,8 +112,167 @@ fn app() -> Html {
                     oninput={&oninput}
                     onsubmit={&onsubmit}
                 />
+
+                <Form
+                    name="feedback-settings"
+                    title="Feedback Settings:"
+                    fields={vec![
+                        Field {
+                            name: str!("feedback_dead_zone"),
+                            label: str!("Dead zone"),
+                            kind: FieldKind::Range {
+                                min: 0,
+                                max: 255,
+                                step: 1,
+                            },
+                            value: FieldValue::Int(10),
+                        },
+                        Field {
+                            name: str!("feedback_min_power"),
+                            label: str!("Min power"),
+                            kind: FieldKind::Range {
+                                min: 0,
+                                max: 799,
+                                step: 5,
+                            },
+                            value: FieldValue::Int(470),
+                        },
+                        Field {
+                            name: str!("feedback_max_power"),
+                            label: str!("Max power"),
+                            kind: FieldKind::Range {
+                                min: 0,
+                                max: 799,
+                                step: 5,
+                            },
+                            value: FieldValue::Int(480),
+                        },
+                        Field {
+                            name: str!("feedback_exponent"),
+                            label: str!("Exponent rate"),
+                            kind: FieldKind::RangeFloat {
+                                min: 1.0,
+                                max: 5.0,
+                                step: 0.05,
+                            },
+                            value: FieldValue::Float(1.8),
+                        },
+                    ]}
+                    button=""
+                    oninput={&oninput}
+                    onsubmit={&onsubmit}
+                />
+
+                <Form
+                    name="pedal-settings"
+                    title="Pedal Settings:"
+                    fields={vec![
+                        // gas:
+                        Field {
+                            name: str!("gas_dead_zone"),
+                            label: str!("Gas dead zone"),
+                            kind: FieldKind::Range {
+                                min: 0,
+                                max: 255,
+                                step: 1,
+                            },
+                            value: FieldValue::Int(2),
+                        },
+                        Field {
+                            name: str!("gas_value_limit"),
+                            label: str!("Gas value limit"),
+                            kind: FieldKind::Range {
+                                min: 0,
+                                max: 255,
+                                step: 1,
+                            },
+                            value: FieldValue::Int(170),
+                        },
+                        Field {
+                            name: str!("gas_smooth_rate"),
+                            label: str!("Gas smooth rate"),
+                            kind: FieldKind::RangeFloat {
+                                min: 0.0,
+                                max: 0.95,
+                                step: 0.05,
+                            },
+                            value: FieldValue::Float(0.3),
+                        },
+                        // brake:
+                        Field {
+                            name: str!("brake_dead_zone"),
+                            label: str!("Brake dead zone"),
+                            kind: FieldKind::Range {
+                                min: 0,
+                                max: 255,
+                                step: 1,
+                            },
+                            value: FieldValue::Int(2),
+                        },
+                        Field {
+                            name: str!("brake_value_limit"),
+                            label: str!("Brake value limit"),
+                            kind: FieldKind::Range {
+                                min: 0,
+                                max: 255,
+                                step: 1,
+                            },
+                            value: FieldValue::Int(150),
+                        },
+                        Field {
+                            name: str!("brake_smooth_rate"),
+                            label: str!("Brake smooth rate"),
+                            kind: FieldKind::RangeFloat {
+                                min: 0.0,
+                                max: 0.95,
+                                step: 0.05,
+                            },
+                            value: FieldValue::Float(0.3),
+                        },
+                        // clutch:
+                        Field {
+                            name: str!("clutch_dead_zone"),
+                            label: str!("Clutch dead zone"),
+                            kind: FieldKind::Range {
+                                min: 0,
+                                max: 255,
+                                step: 1,
+                            },
+                            value: FieldValue::Int(2),
+                        },
+                        Field {
+                            name: str!("clutch_value_limit"),
+                            label: str!("Clutch value limit"),
+                            kind: FieldKind::Range {
+                                min: 0,
+                                max: 255,
+                                step: 1,
+                            },
+                            value: FieldValue::Int(60),
+                        },
+                        Field {
+                            name: str!("clutch_smooth_rate"),
+                            label: str!("Clutch smooth rate"),
+                            kind: FieldKind::RangeFloat {
+                                min: 0.0,
+                                max: 0.95,
+                                step: 0.05,
+                            },
+                            value: FieldValue::Float(0.3),
+                        },
+                    ]}
+                    button=""
+                    oninput={&oninput}
+                    onsubmit={&onsubmit}
+                />
             </div>
         </main>
+
+        <footer>
+            <a class="link" href="https://github.com/fuderis/steering-wheel.git" target="_blank">
+                {"Open Project Repository"}
+            </a>
+        </footer>
         </>
     }
 }

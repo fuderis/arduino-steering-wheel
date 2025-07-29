@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use super::round_to_2;
 use std::{ ops::{ Add, Sub }, str::FromStr };
 use num_traits::ToPrimitive;
 
@@ -30,6 +31,7 @@ where
         Callback::from(move |e: InputEvent| {
             let input = e.target_unchecked_into::<web_sys::HtmlInputElement>();
             let val_str = input.value();
+            
             if let Ok(val) = T::from_str(&val_str) {
                 let clamped = if val < min {
                     min
@@ -39,7 +41,7 @@ where
                     val
                 };
 
-                oninput.emit(clamped);
+                oninput.emit(round_to_2(clamped));
             }
         })
     };
@@ -53,7 +55,7 @@ where
             let next = value + step;
             let clamped = if next > max { max } else { next };
             
-            oninput.emit(clamped);
+            oninput.emit(round_to_2(clamped));
         })
     };
 
@@ -66,7 +68,7 @@ where
             let prev = value - step;
             let clamped = if prev < min { min } else { prev };
             
-            oninput.emit(clamped);
+            oninput.emit(round_to_2(clamped));
         })
     };
 

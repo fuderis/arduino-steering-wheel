@@ -32,3 +32,13 @@ body > main {
     justify-content: flex-end;
   }
 }
+
+body > footer {
+  padding: 22px;
+  justify-content: center;
+
+  .link {
+    text-decoration: underline;
+    color: $light;
+  }
+}
