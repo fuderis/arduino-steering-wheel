@@ -1,3 +1,4 @@
+pub mod config_parts;
 pub mod config;         pub use config::{ Config, CONFIG };
 pub mod logger;         pub use logger::{ Logger, LOGGER };
 pub mod menu_builder;   pub use menu_builder::MenuBuilder;

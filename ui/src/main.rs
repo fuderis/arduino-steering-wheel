@@ -5,16 +5,33 @@ use yew::Renderer;
 #[function_component(App)]
 fn app() -> Html {
     let oninput = Callback::from(|(form_name, fields): (String, Vec<Field>)| {
-        for field in fields {
-            web_sys::console::log_1(&format!("{form_name}: {} = {:?}", field.name, field.value).into());
-        }
+        let json_str = str!("{{ {} }}",
+            fields.into_iter()
+                .map(|field| {
+                    let value = match field.name.as_ref() {
+                        "baud_rate" => if let FieldValue::Str(s) = field.value {
+                            FieldValue::Int(s.parse::<i32>().unwrap())
+                        } else { panic!() },
+                        _ => field.value
+                    };
+
+                    fmt!("\"{}\":{}", field.name, serde_json::to_string(&value).expect("Failed to parse form"))
+                })
+                .collect::<Vec<_>>()
+                .join(",")
+        );
+        
+        // web_sys::console::log_1(&fmt!("{json_str}").into());  // DEBUG: Input form
+        
+        spawn_local(async move {
+            let _ = invoke_handler::<()>("update_config_part", json!({
+                "name": form_name,
+                "json": json_str
+            })).await;
+        });
     });
 
-    let onsubmit = Callback::from(|(form_name, fields): (String, Vec<Field>)| {
-        for field in fields {
-            web_sys::console::log_1(&format!("{form_name}: {} = {:?}", field.name, field.value).into());
-        }
-    });
+    let onsubmit = Callback::from(|(_, _): (String, Vec<Field>)| {});
     
     html! {
         <>
@@ -58,6 +75,16 @@ fn app() -> Html {
                     name="wheel-settings"
                     title="Wheel Settings:"
                     fields={vec![
+                        Field {
+                            name: str!("wheel_bias"),
+                            label: str!("Center bias"),
+                            kind: FieldKind::Range {
+                                min: -255,
+                                max: 255,
+                                step: 1,
+                            },
+                            value: FieldValue::Int(0),
+                        },
                         Field {
                             name: str!("wheel_dead_zone"),
                             label: str!("Dead zone"),
@@ -164,8 +191,8 @@ fn app() -> Html {
                 />
 
                 <Form
-                    name="pedal-settings"
-                    title="Pedal Settings:"
+                    name="pedals-settings"
+                    title="Pedals Settings:"
                     fields={vec![
                         // gas:
                         Field {

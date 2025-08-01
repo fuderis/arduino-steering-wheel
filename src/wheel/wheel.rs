@@ -25,15 +25,15 @@ impl Wheel {
         info!("Connecting to a serial port..");
         
         loop {
-            let Config { com_port, baud_rate, .. } = App::get_config().clone();
+            let Config { comport, .. } = App::get_config().clone();
 
-            let result = serialport::new(&fmt!("COM{}", com_port), baud_rate)
+            let result = serialport::new(&fmt!("COM{}", comport.com_port), comport.baud_rate)
                 .timeout(Duration::from_millis(5))
                 .open()
                 .map_err(|e| Error::FailedToGetCOMPort(e));
             
             if let Ok(port) = result {
-                warn!("Connected to the serial port COM{com_port}, {baud_rate}bps!");
+                warn!("Connected to the serial port COM{}, {}bps!", comport.com_port, comport.baud_rate);
                 return Ok(port);
             } else {
                 tokio_sleep(Duration::from_millis(500)).await;
@@ -65,7 +65,7 @@ impl Wheel {
         let mut config = App::get_config().clone();
 
         // calculating wheel degs limit:
-        let mut wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / (config.wheel_degs_max_possible * 2) as f32).round() as u16;
+        let mut wheel_limit = (config.wheel.wheel_degs_limit as f32 * 1020.0 / (config.wheel.wheel_degs_max_possible * 2) as f32).round() as u16;
         let mut wheel_limit_to_side = (wheel_limit as f32).round() as u16;
         
         // init empty wheel state:
@@ -83,12 +83,12 @@ impl Wheel {
             if CONFIG_UPDATED.swap(false, Ordering::SeqCst) {
                 let new_config = App::get_config().clone();
 
-                if new_config.com_port != config.com_port {
+                if new_config.comport.com_port != config.comport.com_port {
                     com_port = Self::open_com_port().await?;
                 }
                 config = new_config;
 
-                wheel_limit = (config.wheel_degs_limit as f32 * 1020.0 / (config.wheel_degs_max_possible * 2) as f32).round() as u16;
+                wheel_limit = (config.wheel.wheel_degs_limit as f32 * 1020.0 / (config.wheel.wheel_degs_max_possible * 2) as f32).round() as u16;
                 wheel_limit_to_side = (wheel_limit as f32).round() as u16;
             }
             
@@ -148,11 +148,11 @@ impl Wheel {
         state.wheel = Self::filter_value(
             state.wheel,
             prev_state.wheel,
-            config.wheel_dead_zone,
+            config.wheel.wheel_dead_zone,
             true,
             wheel_limit,
-            config.wheel_smooth_rate,
-            config.wheel_bias,
+            config.wheel.wheel_smooth_rate,
+            config.wheel.wheel_bias,
         );
         let wheel_centered_value = state.wheel as i16 - 510;
 
@@ -161,30 +161,30 @@ impl Wheel {
         state.gas = Self::filter_value(
             state.gas,
             prev_state.gas,
-            config.gas_dead_zone,
+            config.pedals.gas_dead_zone,
             false,
-            config.gas_value_limit,
-            config.gas_smooth_rate,
+            config.pedals.gas_value_limit,
+            config.pedals.gas_smooth_rate,
             0
         );
 
         state.brake = Self::filter_value(
             state.brake,
             prev_state.brake,
-            config.brake_dead_zone,
+            config.pedals.brake_dead_zone,
             false,
-            config.brake_value_limit,
-            config.brake_smooth_rate,
+            config.pedals.brake_value_limit,
+            config.pedals.brake_smooth_rate,
             0
         );
 
         state.clutch = Self::filter_value(
             state.clutch,
             prev_state.clutch,
-            config.clutch_dead_zone,
+            config.pedals.clutch_dead_zone,
             false,
-            config.clutch_value_limit,
-            config.clutch_smooth_rate,
+            config.pedals.clutch_value_limit,
+            config.pedals.clutch_smooth_rate,
             0
         );
 
@@ -196,19 +196,19 @@ impl Wheel {
 
         let gamepad_state = XGamepad {
             buttons,
-            left_trigger: Self::to_trigger_value(state.brake, config.brake_value_limit),
-            right_trigger: Self::to_trigger_value(state.gas, config.gas_value_limit),
+            left_trigger: Self::to_trigger_value(state.brake, config.pedals.brake_value_limit),
+            right_trigger: Self::to_trigger_value(state.gas, config.pedals.gas_value_limit),
             thumb_lx: Self::to_axis_value(wheel_centered_value, wheel_limit),
             thumb_ly: 0,
             thumb_rx: 0,
-            thumb_ry: Self::to_absolute_axis_value(state.clutch, config.clutch_value_limit),
+            thumb_ry: Self::to_absolute_axis_value(state.clutch, config.pedals.clutch_value_limit),
         };
 
         // get feedback direction:
         let feedback_direct =
             if wheel_centered_value == 0 {
                 Direction::Center
-            } else if (wheel_centered_value > 0) ^ config.wheel_reverse_direction {
+            } else if (wheel_centered_value > 0) ^ config.wheel.wheel_reverse_direction {
                 Direction::Left
             } else {
                 Direction::Right
@@ -221,16 +221,16 @@ impl Wheel {
         };
         
         // calculating feedback power:
-        let feedback_power = if wheel_centered_value.abs() > config.feedback_dead_zone as i16 {
-            config.feedback_min_power
+        let feedback_power = if wheel_centered_value.abs() > config.feedback.feedback_dead_zone as i16 {
+            config.feedback.feedback_min_power
 
             + Self::calculate_wheel_feedback(
                 wheel_centered_value,
                 wheel_limit_to_side,
-                config.feedback_dead_zone,
-                config.feedback_min_power,
-                config.feedback_max_power,
-                config.feedback_exponent,
+                config.feedback.feedback_dead_zone,
+                config.feedback.feedback_min_power,
+                config.feedback.feedback_max_power,
+                config.feedback.feedback_exponent,
             )
 
             /* + Self::calculate_vibration_feedback(
@@ -239,7 +239,7 @@ impl Wheel {
             ) */
         } else {
             0
-        }.clamp(0, config.feedback_max_power);
+        }.clamp(0, config.feedback.feedback_max_power);
 
         let feedback = Feedback {
             motor: feedback_direct,
@@ -255,24 +255,24 @@ impl Wheel {
             App::emit_event("update-state", json!(
                 {
                     "wheel": wheel_centered_value,
-                    "wheel_min": config.wheel_dead_zone,
+                    "wheel_min": config.wheel.wheel_dead_zone,
                     "wheel_max": wheel_limit_to_side,
 
                     "feeback": feedback.power,
-                    "feeback_min": config.feedback_min_power,
-                    "feeback_max": config.feedback_max_power,
+                    "feeback_min": config.feedback.feedback_min_power,
+                    "feeback_max": config.feedback.feedback_max_power,
 
                     "gas": state.gas,
-                    "gas_min": config.gas_dead_zone,
-                    "gas_max": config.gas_value_limit,
+                    "gas_min": config.pedals.gas_dead_zone,
+                    "gas_max": config.pedals.gas_value_limit,
 
                     "brake": state.brake,
-                    "brake_min": config.brake_dead_zone,
-                    "brake_max": config.brake_value_limit,
+                    "brake_min": config.pedals.brake_dead_zone,
+                    "brake_max": config.pedals.brake_value_limit,
 
                     "clutch": state.clutch,
-                    "clutch_min": config.clutch_dead_zone,
-                    "clutch_max": config.clutch_value_limit,
+                    "clutch_min": config.pedals.clutch_dead_zone,
+                    "clutch_max": config.pedals.clutch_value_limit,
                 }
             ));
         }
