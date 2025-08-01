@@ -17,8 +17,6 @@
 * **Force feedback**: the ability to change the strength, smoothness, and sensitivity of the response.
 * **Easy configuration** via a convenient software interface.
 
-![Preview](readme/presentation.png)
-
 
 ## Installation:
 
@@ -58,6 +56,8 @@
 | `Clutch Dead Zone`          | Clutch pedal insensitivity                                         | 2 suppresses mechanical noise                                   |
 | `Clutch Value Limit`        | Clutch pedal's maximum mapped output value                         | Selected individually                                           |
 | `clutch Smooth Rate`        | Smoothing for clutch pedal input                                   | 0.3 for balanced input response                                 |
+
+![Preview](readme/presentation.png)
 
 
 ## Feedback:
