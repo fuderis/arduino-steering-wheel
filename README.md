@@ -22,9 +22,11 @@
 
 1. **Download and install the latest version**: Download the current release for Windows ([Release v1.0.0](https://github.com/fuderis/steering-wheel/raw/main/SteeringWheel.zip)) and extract it to a convenient location.
 
-2. **Configure the COM port and update rate**: Select the correct serial port (COM port) that your Arduino is connected to and set the optimal baud rate in the application's settings.
+2. **Flash the Arduino board**: Upload the Arduino [steering wheel sketch](https://github.com/fuderis/steering-wheel/raw/main/sketch/sketch.ino) to your Arduino microcontroller using the Arduino IDE. This firmware transmits potentiometer and button data and controls force feedback.
 
-3. **Tune wheel, feedback, and pedals settings as you prefer**: Adjust steering wheel sensitivity and angle, set force feedback parameters, and configure pedal response to suit your setup and driving style.
+3. **Configure the COM port and update rate**: Select the correct serial port (COM port) that your Arduino is connected to and set the optimal baud rate in the application's settings.
+
+4. **Tune wheel, feedback, and pedals settings as you prefer**: Adjust steering wheel sensitivity and angle, set force feedback parameters, and configure pedal response to suit your setup and driving style.
 
 
 ## Options:
