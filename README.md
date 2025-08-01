@@ -2,9 +2,10 @@
 
 ![Preview](readme/preview.png)
 
-**This is an interface for software** that allows you to control homemade gaming steering wheels with pedals and a gearshift unit based on any Arduino microcontroller, even if it does not support HID interfaces.</br>
+**This is software** that allows you to control homemade game steering wheel with pedals and gearshift based on any Arduino microcontroller, even if it does not support HID interfaces.</br>
 
-**Everything is thought out for maximum comfort**: the program filters signals, eliminates unnecessary noise and provides flexible dead zone settings for optimal control response.
+**Everything is thought out for maximum comfort**: the program filters signals, eliminates unnecessary noise and provides flexible adjustment of the dead zone for optimal response to control.
+
 
 > **Download for Windows**: [Release v1.0.0](https://github.com/fuderis/steering-wheel/raw/main/SteeringWheel.zip)
 
