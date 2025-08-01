@@ -6,6 +6,8 @@
 
 **Everything is thought out for maximum comfort**: the program filters signals, eliminates unnecessary noise and provides flexible dead zone settings for optimal control response.
 
+> **Download for Windows**: [Release v1.0.0](https://github.com/fuderis/steering-wheel/raw/main/SteeringWheel.zip)
+
 
 ## How does it work?
 
@@ -16,6 +18,46 @@
 * **Easy configuration** via a convenient software interface.
 
 ![Preview](readme/presentation.png)
+
+
+## Installation:
+
+1. **Download and install the latest version**: Download the current release for Windows ([Release v1.0.0](https://github.com/fuderis/steering-wheel/raw/main/SteeringWheel.zip)) and extract it to a convenient location.
+
+2. **Configure the COM port and update rate**: Select the correct serial port (COM port) that your Arduino is connected to and set the optimal baud rate in the application's settings.
+
+3. **Tune wheel, feedback, and pedals settings as you prefer**: Adjust steering wheel sensitivity and angle, set force feedback parameters, and configure pedal response to suit your setup and driving style.
+
+
+## Options:
+
+| Name:                       | Description:                                                       | Recommendations:                                                |
+|-----------------------------|--------------------------------------------------------------------|-----------------------------------------------------------------|
+| **Com Port:**               |                                                                    |                                                                 |
+| `COM port`                  | Serial port number to which the Arduino is connected               | Select the correct port where the steering wheel is connected   |
+| `Baud Rate`                 | Communication speed between Arduino and PC (in baud)               | 115200 is typically ideal                                       |
+| **Wheel:**                  |                                                                    |                                                                 |
+| `Wheel Bias`                | Wheel zero-point calibration offset                                | Adjust if steering is off-center                                |
+| `Wheel Dead Zone`           | Insensitivity zone near the neutral point (degrees)                | 5 is reasonable to eliminate minor noise                        |
+| `Wheel Degs Limit`          | Maximum rotation angle mapped to gamepad (degrees)                 | 540 for most racing games, increase for realism                 |
+| `Wheel Degs Max Possible`   | Physical maximum rotation the wheel supports                       | Maximum one-way angle of the potentiometer                      |
+| `Wheel Smooth Rate`         | Smoothing factor for the wheel's signal [0 - 1]                    | 0.6 for smooth responsive                                       |
+| `Wheel Reverse Direction`   | Invert wheel direction (true/false)                                | Enable if wheel potentiometer is installed reversed             |
+| **Feedback:**               |                                                                    |                                                                 |
+| `Feedback Dead Zone`        | Ignored feedback zone—prevents weak, unwanted vibrations           | 10 to suppress minor feedback noise                             |
+| `Feedback Min Power`        | Minimum power level sent to the feedback motor                     | The minimum motor speed at which it does not stall              |
+| `Feedback Max Power`        | Maximum power level sent to the feedback motor                     | The maximum motor speed at which it does not stall              |
+| `Feedback Exponent`         | Nonlinearity in force feedback response                            | 1.8 for progressive force sensation                             |
+| **Pedals:**                 |                                                                    |                                                                 |
+| `Gas Dead Zone`             | Pedal insensitivity near rest (gas)                                | 2 suppresses mechanical noise                                   |
+| `Gas Value Limit`           | Gas pedal's maximum mapped output value                            | Selected individually                                           |
+| `Gas Smooth Rate`           | Smoothing for gas pedal input                                      | 0.3 for balanced input response                                 |
+| `Brake Dead Zone`           | Brake pedal insensitivity                                          | 2 suppresses mechanical noise                                   |
+| `Brake value Limit`         | Brake pedal's maximum mapped output value                          | Selected individually                                           |
+| `Brake Smooth Rate`         | Smoothing for brake pedal input                                    | 0.3 for balanced input response                                 |
+| `Clutch Dead Zone`          | Clutch pedal insensitivity                                         | 2 suppresses mechanical noise                                   |
+| `Clutch Value Limit`        | Clutch pedal's maximum mapped output value                         | Selected individually                                           |
+| `clutch Smooth Rate`        | Smoothing for clutch pedal input                                   | 0.3 for balanced input response                                 |
 
 
 ## Feedback:
