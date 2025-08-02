@@ -156,7 +156,7 @@ impl Wheel {
         );
         let wheel_centered_value = state.wheel as i16 - 510;
 
-        dbg!(&wheel_centered_value);  // DEBUG: wheel value
+        // dbg!(&wheel_centered_value);  // DEBUG: wheel value
 
         state.gas = Self::filter_value(
             state.gas,

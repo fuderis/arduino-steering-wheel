@@ -59,8 +59,13 @@ async fn main() -> Result<()> {
             )
             .on_menu(|id| {
                 match id {
-                    "show_hide" => App::show_hide_window().unwrap(),
-                    "exit" => App::exit(0).unwrap(),
+                    "show_hide" => {
+                        App::show_hide_window().ok();
+                    }
+                    "exit" => {
+                        APP_CLOSED.swap(true, Ordering::SeqCst);
+                        App::exit(0).ok();
+                    }
                     _ => warn!("Unreached menu id '{id}'!"),
                 }
             })
@@ -72,12 +77,9 @@ async fn main() -> Result<()> {
         .on_show(Arc::new(|| {
             WINDOW_VISIBLE.swap(true, Ordering::SeqCst);
         }))
-        .on_close(Arc::new(|| {
-            APP_CLOSED.swap(true, Ordering::SeqCst);
-        }))
 
         .autostart(&[])
-        // .hide_on_start()
+        .hide_on_start()
         .hide_to_tray_always()
         .build()?;
 

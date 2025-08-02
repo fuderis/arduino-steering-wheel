@@ -232,13 +232,17 @@ impl AppBuilder {
                             WindowEvent::CloseRequested { api, .. } => {
                                 api.prevent_close();
 
-                                if let Some(handler) = self.on_close.as_ref() {
-                                    (*handler)();
-                                }
-                                
                                 if self.hide_to_tray_always {
+                                    if let Some(handler) = self.on_hide.as_ref() {
+                                        (*handler)();
+                                    }
+                                    
                                     App::hide_window().ok();
                                 } else {
+                                    if let Some(handler) = self.on_close.as_ref() {
+                                        (*handler)();
+                                    }
+
                                     App::save_config().unwrap();
                                     App::save_logs().unwrap();
                                     App::remove_tray().ok();
