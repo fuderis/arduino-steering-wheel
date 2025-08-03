@@ -7,7 +7,7 @@
 **Everything is thought out for maximum comfort**: the program filters signals, eliminates unnecessary noise and provides flexible adjustment of the dead zone for optimal response to control.
 
 
-> **Download for Windows**: [Release v1.0.0](https://github.com/fuderis/steering-wheel/raw/main/SteeringWheel.zip)
+> **Download for Windows**: [Release v1.0.2](https://github.com/fuderis/steering-wheel/raw/main/SteeringWheel.zip)
 
 
 ## How does it work?
@@ -21,7 +21,7 @@
 
 ## Installation:
 
-1. **Download and install the latest version**: Download the current release for Windows ([Release v1.0.0](https://github.com/fuderis/steering-wheel/raw/main/SteeringWheel.zip)) and extract it to a convenient location.
+1. **Download and install the latest version**: Download the current release for Windows ([Release v1.0.2](https://github.com/fuderis/steering-wheel/raw/main/SteeringWheel.zip)) and extract it to a convenient location.
 
 2. **Flash the Arduino board**: Upload the Arduino [steering wheel sketch](https://github.com/fuderis/steering-wheel/raw/main/sketch/sketch.ino) to your Arduino microcontroller using the Arduino IDE. This firmware transmits potentiometer and button data and controls force feedback.
 

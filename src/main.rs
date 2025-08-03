@@ -1,6 +1,12 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use app::{ prelude::*, CONFIG_UPDATED, WINDOW_VISIBLE, APP_CLOSED, Wheel, };
 
+/// Returns app config
+#[tauri::command]
+async fn get_config() -> StdResult<Config, String> {
+    Ok(Config::read(path!("$/Steering Wheel/config.json")).unwrap_or_default())
+}
+
 /// Updates config by parts
 #[tauri::command]
 async fn update_config_part(name: String, json: String) -> StdResult<(), String> {
@@ -49,7 +55,8 @@ async fn main() -> Result<()> {
         .config(path!("$/Steering Wheel/config.json"))
 
         .invokes(tauri::generate_handler![
-            update_config_part
+            get_config,
+            update_config_part,
         ])
         
         .system_tray(Tray::builder()

@@ -1,9 +1,28 @@
-use app::{ prelude::*, form::{ Form, Field, FieldKind, FieldValue } };
+use app::{ prelude::*, form::{ Form, Field, FieldKind, FieldValue }, config::* };
 use yew::Renderer;
 
 /// The application component
 #[function_component(App)]
 fn app() -> Html {
+    let config = use_state(|| Config::default());
+    let is_loaded = use_state(|| false);
+
+    // get config data:
+    {
+        let config = config.clone();
+        let is_loaded = is_loaded.clone();
+        use_effect_with((), move |_| {
+            spawn_local(async move {
+                let fetched_config = invoke_handler::<Config>("get_config", json!({})).await
+                    .expect("Failed to get config");
+
+                config.set(fetched_config);
+                is_loaded.set(true);
+            });
+            || ()
+        });
+    }
+    
     let oninput = Callback::from(|(form_name, fields): (String, Vec<Field>)| {
         let json_str = str!("{{ {} }}",
             fields.into_iter()
@@ -32,6 +51,12 @@ fn app() -> Html {
     });
 
     let onsubmit = Callback::from(|(_, _): (String, Vec<Field>)| {});
+
+    if !*is_loaded {
+        return html! {
+            <div>{ "Loading wheel configuration.." }</div>
+        };
+    }
     
     html! {
         <>
@@ -53,7 +78,7 @@ fn app() -> Html {
                                 max: 9999,
                                 step: 1,
                             },
-                            value: FieldValue::Int(6),
+                            value: FieldValue::Int(config.comport.com_port),
                         },
                         Field {
                             name: str!("baud_rate"),
@@ -63,7 +88,7 @@ fn app() -> Html {
                                     .map(|rate| (rate.to_string(), fmt!("{rate} bps")))
                                     .collect::<Vec<_>>(),
                             },
-                            value: FieldValue::Str(str!("115200")),
+                            value: FieldValue::Str(config.comport.baud_rate.to_string()),
                         },
                     ]}
                     button=""
@@ -83,7 +108,7 @@ fn app() -> Html {
                                 max: 255,
                                 step: 1,
                             },
-                            value: FieldValue::Int(0),
+                            value: FieldValue::Int(config.wheel.wheel_bias),
                         },
                         Field {
                             name: str!("wheel_dead_zone"),
@@ -93,7 +118,7 @@ fn app() -> Html {
                                 max: 255,
                                 step: 1,
                             },
-                            value: FieldValue::Int(5),
+                            value: FieldValue::Int(config.wheel.wheel_dead_zone),
                         },
                         Field {
                             name: str!("wheel_degs_limit"),
@@ -103,7 +128,7 @@ fn app() -> Html {
                                 max: 1080,
                                 step: 30,
                             },
-                            value: FieldValue::Int(540),
+                            value: FieldValue::Int(config.wheel.wheel_degs_limit),
                         },
                         Field {
                             name: str!("wheel_degs_max_possible"),
@@ -113,7 +138,7 @@ fn app() -> Html {
                                 max: 1980,
                                 step: 30,
                             },
-                            value: FieldValue::Int(1980),
+                            value: FieldValue::Int(config.wheel.wheel_degs_max_possible),
                         },
                         Field {
                             name: str!("wheel_smooth_rate"),
@@ -123,7 +148,7 @@ fn app() -> Html {
                                 max: 0.95,
                                 step: 0.05,
                             },
-                            value: FieldValue::Float(0.6),
+                            value: FieldValue::Float(config.wheel.wheel_smooth_rate),
                         },
                         Field {
                             name: str!("wheel_reverse_direction"),
@@ -132,7 +157,7 @@ fn app() -> Html {
                                 enabled: str!("Enabled"),
                                 disabled: str!("Disabled"),
                             },
-                            value: FieldValue::Bool(false),
+                            value: FieldValue::Bool(config.wheel.wheel_reverse_direction),
                         },
                     ]}
                     button=""
@@ -152,7 +177,7 @@ fn app() -> Html {
                                 max: 255,
                                 step: 1,
                             },
-                            value: FieldValue::Int(10),
+                            value: FieldValue::Int(config.feedback.feedback_dead_zone),
                         },
                         Field {
                             name: str!("feedback_min_power"),
@@ -162,7 +187,7 @@ fn app() -> Html {
                                 max: 799,
                                 step: 5,
                             },
-                            value: FieldValue::Int(470),
+                            value: FieldValue::Int(config.feedback.feedback_min_power),
                         },
                         Field {
                             name: str!("feedback_max_power"),
@@ -172,7 +197,7 @@ fn app() -> Html {
                                 max: 799,
                                 step: 5,
                             },
-                            value: FieldValue::Int(480),
+                            value: FieldValue::Int(config.feedback.feedback_max_power),
                         },
                         Field {
                             name: str!("feedback_exponent"),
@@ -182,7 +207,7 @@ fn app() -> Html {
                                 max: 5.0,
                                 step: 0.05,
                             },
-                            value: FieldValue::Float(1.8),
+                            value: FieldValue::Float(config.feedback.feedback_exponent),
                         },
                     ]}
                     button=""
@@ -203,7 +228,7 @@ fn app() -> Html {
                                 max: 255,
                                 step: 1,
                             },
-                            value: FieldValue::Int(2),
+                            value: FieldValue::Int(config.pedals.gas_dead_zone),
                         },
                         Field {
                             name: str!("gas_value_limit"),
@@ -213,7 +238,7 @@ fn app() -> Html {
                                 max: 255,
                                 step: 1,
                             },
-                            value: FieldValue::Int(170),
+                            value: FieldValue::Int(config.pedals.gas_value_limit),
                         },
                         Field {
                             name: str!("gas_smooth_rate"),
@@ -223,7 +248,7 @@ fn app() -> Html {
                                 max: 0.95,
                                 step: 0.05,
                             },
-                            value: FieldValue::Float(0.3),
+                            value: FieldValue::Float(config.pedals.gas_smooth_rate),
                         },
                         // brake:
                         Field {
@@ -234,7 +259,7 @@ fn app() -> Html {
                                 max: 255,
                                 step: 1,
                             },
-                            value: FieldValue::Int(2),
+                            value: FieldValue::Int(config.pedals.brake_dead_zone),
                         },
                         Field {
                             name: str!("brake_value_limit"),
@@ -244,7 +269,7 @@ fn app() -> Html {
                                 max: 255,
                                 step: 1,
                             },
-                            value: FieldValue::Int(150),
+                            value: FieldValue::Int(config.pedals.brake_value_limit),
                         },
                         Field {
                             name: str!("brake_smooth_rate"),
@@ -254,7 +279,7 @@ fn app() -> Html {
                                 max: 0.95,
                                 step: 0.05,
                             },
-                            value: FieldValue::Float(0.3),
+                            value: FieldValue::Float(config.pedals.brake_smooth_rate),
                         },
                         // clutch:
                         Field {
@@ -265,7 +290,7 @@ fn app() -> Html {
                                 max: 255,
                                 step: 1,
                             },
-                            value: FieldValue::Int(2),
+                            value: FieldValue::Int(config.pedals.clutch_dead_zone),
                         },
                         Field {
                             name: str!("clutch_value_limit"),
@@ -275,7 +300,7 @@ fn app() -> Html {
                                 max: 255,
                                 step: 1,
                             },
-                            value: FieldValue::Int(60),
+                            value: FieldValue::Int(config.pedals.clutch_value_limit),
                         },
                         Field {
                             name: str!("clutch_smooth_rate"),
@@ -285,7 +310,7 @@ fn app() -> Html {
                                 max: 0.95,
                                 step: 0.05,
                             },
-                            value: FieldValue::Float(0.3),
+                            value: FieldValue::Float(config.pedals.clutch_smooth_rate),
                         },
                     ]}
                     button=""

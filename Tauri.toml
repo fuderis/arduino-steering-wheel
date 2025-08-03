@@ -1,5 +1,5 @@
 productName = "Arduino Steering Wheel"
-version = "1.0.0"
+version = "1.0.2"
 identifier = "com.fuderis.steering-wheel"
 
 [build]

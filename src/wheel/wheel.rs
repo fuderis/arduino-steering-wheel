@@ -153,6 +153,7 @@ impl Wheel {
             wheel_limit,
             config.wheel.wheel_smooth_rate,
             config.wheel.wheel_bias,
+            config.wheel.wheel_reverse_direction,
         );
         let wheel_centered_value = state.wheel as i16 - 510;
 
@@ -165,7 +166,8 @@ impl Wheel {
             false,
             config.pedals.gas_value_limit,
             config.pedals.gas_smooth_rate,
-            0
+            0,
+            false
         );
 
         state.brake = Self::filter_value(
@@ -175,7 +177,8 @@ impl Wheel {
             false,
             config.pedals.brake_value_limit,
             config.pedals.brake_smooth_rate,
-            0
+            0,
+            false
         );
 
         state.clutch = Self::filter_value(
@@ -185,7 +188,8 @@ impl Wheel {
             false,
             config.pedals.clutch_value_limit,
             config.pedals.clutch_smooth_rate,
-            0
+            0,
+            false
         );
 
         // activating pressed buttons:
@@ -299,11 +303,11 @@ impl Wheel {
     }
 
     /// Filters potentiometer value
-    fn filter_value(value: u16, prev_value: u16, dead_zone: u16, dead_zone_from_center: bool, max_value: u16, smooth_rate: f32, bias: i16) -> u16 {        
+    fn filter_value(value: u16, prev_value: u16, dead_zone: u16, dead_zone_from_center: bool, max_value: u16, smooth_rate: f32, bias: i16, reverse: bool) -> u16 {        
         let smooth_value = (prev_value as f32 * smooth_rate + value as f32 * (1.0 - smooth_rate)).round() as u16;
 
-        let mut filtered_value = if dead_zone_from_center {
-            let value_i16 = smooth_value as i16 - 510;
+        let filtered_value = if dead_zone_from_center {
+            let value_i16 = smooth_value as i16 - 510 + if !reverse { bias * -1 }else{ bias };
             let prev_i16 = prev_value as i16 - 510;
             let max_i16 = max_value as i16;
             
@@ -324,10 +328,6 @@ impl Wheel {
         } else {
             0
         };
-
-        if bias != 0 {
-            filtered_value = (filtered_value as i32 + bias as i32).clamp(0, max_value as i32) as u16;
-        }
 
         filtered_value
     }
