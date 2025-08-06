@@ -23,7 +23,7 @@
 
 1. **Download and install the latest version**: Download for Windows - ([Release v1.0.2](https://github.com/fuderis/steering-wheel/raw/main/SteeringWheel.zip)).
 
-2. **Download and install the 'Vigem Bus driver'**: It's need to emulate the Xbox360 gamepad - ([Vigem Bus driver](https://vigembus.com/download/)).
+2. **Download and install the 'Vigem Bus driver'**: It's need to emulate the `Xbox360` gamepad - ([Vigem Bus driver](https://vigembus.com/download/)).
 
 3. **Flash the Arduino board**: Upload the Arduino [steering wheel sketch](https://github.com/fuderis/steering-wheel/raw/main/sketch/sketch.ino) to your Arduino microcontroller using the Arduino IDE. This firmware transmits potentiometer and button data and controls force feedback.
 
